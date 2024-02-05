@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8015040808558825811
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 532130592921971306, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 4298044805029167471, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: TrailModule.dieWithParticles
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4523413267386295057, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790850, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: Track1
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790850, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: carName
+      value: cornering
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790850, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: FinishLine
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790851, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: boostBar
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790851, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: ingameUI
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790851, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: timeText
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790851, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: velocityText
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790851, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: CheckpointList
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790852, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+    - target: {fileID: 4536841450097790853, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: TrailModule.widthOverTrail.minMaxState
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790854, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790854, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790854, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 6.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790854, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 387.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790854, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790854, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790854, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790854, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790854, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790861, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: m_Name
+      value: GhostCar Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536841450097790861, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8854434530816607392, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: inputType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9029306312428758172, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cef6ab3850268634c9658d31d03e0213, type: 3}

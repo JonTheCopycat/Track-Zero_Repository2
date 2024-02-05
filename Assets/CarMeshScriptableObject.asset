@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd70b6dc57f88d242936e49589d3cef0, type: 3}
+  m_Name: CarMeshScriptableObject
+  m_EditorClassIdentifier: 
+  carModels:
+  - {fileID: 4879047322164160456, guid: 73fd5a54455ceaa448c9e18196567a1c, type: 3}
+  - {fileID: 4879047322164160456, guid: 46ea51e380f281b4780f6296c547bf4c, type: 3}
+  - {fileID: 8534638632379592161, guid: 2aae53ec2f75cca4387464c761bc42b3, type: 3}
+  - {fileID: 6766176865264292070, guid: 4327c944795be354cae6358e53ae4804, type: 3}
+  - {fileID: 8578124699280258729, guid: 8cdac038bd070024a9df5981cbf1fced, type: 3}
+  - {fileID: 7636029671828484307, guid: 2053ce2f1736f9c4daefd3cca1b1d422, type: 3}
+  - {fileID: 6605917286114218886, guid: 1eabf9a0a9ed1954dbfb269251634e9b, type: 3}
+  - {fileID: 6512256285170410419, guid: 7b142ebb666215d469f295a3462c5937, type: 3}
+  - {fileID: 1635836647039850306, guid: 12fb89e72a11024418c233cffc002d92, type: 3}
+  carModelNames:
+  - f2
+  - muscle
+  - smooth
+  - sidebooster
+  - sled-galarian
+  - drift
+  - grip
+  - boost
+  - hover

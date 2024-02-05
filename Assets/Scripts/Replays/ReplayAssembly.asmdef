@@ -1,0 +1,16 @@
+{
+    "name": "ReplayAssembly",
+    "rootNamespace": "",
+    "references": [
+        "GUID:44a6f044aed279c4f9735af4c4ccda4e"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
