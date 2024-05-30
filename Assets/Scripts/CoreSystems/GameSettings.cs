@@ -9,10 +9,10 @@ public static class GameSettings
     public static int cameraPosition = 0;
     public static CameraPosition[] allCameraPositions =
     {
-        new CameraPosition("Near Cam", new Vector3(0, 0.25f, -2.5f), false, 15f),
-        new CameraPosition("Far Cam", new Vector3(0, 0.75f, -3.25f), false, 20f),
+        new CameraPosition("Near Cam", new Vector3(0, 0.25f, -2.75f), false, 15f),
+        new CameraPosition("Far Cam", new Vector3(0, 0.75f, -3.5f), false, 20f),
         new CameraPosition("Hood Cam", new Vector3(0,0.6f,0.2f -0.25f), true, 2.5f),
-        new CameraPosition("Low Cam", new Vector3(0, 0.3f, -2f -0.25f), false, 8)
+        new CameraPosition("Low Cam", new Vector3(0, 0.2f, -2.25f), false, 10f)
     };
 
     public static string[] allDifficultyNames =

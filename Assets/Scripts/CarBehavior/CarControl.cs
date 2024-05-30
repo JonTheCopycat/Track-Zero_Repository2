@@ -359,8 +359,8 @@ public class CarControl : MonoBehaviour
         if (started)
         {
             //weaken handling as speed increases, publicaly (so that other scripts that rely on this can use it without problem)
-            handling = car.GetHandling() * 1f * speedFactor;
-            dHandling = car.GetDHandling() * 1f * speedFactor;
+            handling = 0.33f + car.GetHandling() * 0.725f * speedFactor;
+            dHandling = 0.33f + car.GetDHandling() * 0.725f * speedFactor;
             
             CustomUpdate();
         }
@@ -1142,7 +1142,12 @@ public class CarControl : MonoBehaviour
     {
         if ((status & C_ENABLED) == 0 && Time.time - countdownTimestamp >= 1.5f)
         {
-            BoostRoutine = StartCoroutine(Boost(10f * speedFactor, 0.5f));
+            if (inputHandler.GetAcceleration() >= 0.5f)
+            {
+                BoostRoutine = StartCoroutine(Boost(50f * speedFactor, 0.5f));
+                rb.velocity += transform.forward * 50;
+            }
+            
 
             status |= C_ENABLED;
         }
@@ -1269,18 +1274,6 @@ public class CarControl : MonoBehaviour
         {
             handlingLimiter = Mathf.Clamp01(Mathf.Max(handlingLimiter, (driftAngle - fullDriftAngle) / fullDriftAngle));
             currentHandling = handling;
-
-            //if drifting in the opposite direction of steering, simply turn harder.
-            if (inputHandler.GetSteering() * (Quaternion.Inverse(rb.rotation) * rb.velocity).x > 0)
-            {
-                currentHandling += 1f * (driftAngle / 90);
-                rawTractionModifier *= 1 - (0.15f * Mathf.Abs(inputHandler.GetSteering()));
-                //responceModifier *= 1f;
-            }
-            else if (inputHandler.GetSteering() * (Quaternion.Inverse(rb.rotation) * rb.velocity).x < 0)
-            {
-                rawTractionModifier *= 1 + (0.15f * Mathf.Abs(inputHandler.GetSteering()));
-            }
         }
         else
         {
@@ -1290,6 +1283,10 @@ public class CarControl : MonoBehaviour
         }
 
         if (isSliding())
+        {
+            currentHandling += 0.25f + 0.25f * rb.velocity.magnitude / (350 * speedFactor);
+        }
+        if (isBraking())
         {
             currentHandling += 0.25f * inputHandler.GetBrakes();
         }
@@ -1304,6 +1301,18 @@ public class CarControl : MonoBehaviour
             targetVelocity = currentHandling * inputHandler.GetSteering();
         else
         {
+            //if drifting in the opposite direction of steering, simply turn harder.
+            if (inputHandler.GetSteering() * (Quaternion.Inverse(rb.rotation) * rb.velocity).x > 0)
+            {
+                currentHandling += 1f * (driftAngle / 70);
+                rawTractionModifier *= 1 - (0.15f * Mathf.Abs(inputHandler.GetSteering()));
+                //responceModifier *= 1f;
+            }
+            else if (inputHandler.GetSteering() * (Quaternion.Inverse(rb.rotation) * rb.velocity).x < 0)
+            {
+                rawTractionModifier *= 1 + (0.15f * Mathf.Abs(inputHandler.GetSteering()));
+            }
+
             float conservedV = Mathf.Clamp(handlingVel, -6, 6) * oversteerModifier;
             if (inputHandler.GetSteering() >= 0)
             {
@@ -1474,7 +1483,7 @@ public class CarControl : MonoBehaviour
             //handling
             Quaternion q = Quaternion.AngleAxis(handlingVel * Mathf.Rad2Deg * Time.deltaTime, rb.rotation * Vector3.up);
             Vector3 frontNewPosition = q * (frontCenter - backCenter) + backCenter;
-            Vector3 backNewPosition = backCenter + rb.velocity * 0.05f * oversteerVel * Time.deltaTime;
+            Vector3 backNewPosition = backCenter + rb.velocity * 0.025f * oversteerVel * Time.deltaTime;
             //rb.MovePosition(q * (rb.position - backCenter) + backCenter);
             rb.MovePosition((frontNewPosition + backNewPosition) * 0.5f);
             rb.MoveRotation(Quaternion.LookRotation(frontNewPosition - backNewPosition, transform.up));
@@ -1707,7 +1716,7 @@ public class CarControl : MonoBehaviour
             status &= (byte)~C_DRIFTING;
         }
 
-        float newTraction = Mathf.LerpUnclamped(0.033f, 0.1f, traction) * speedFactor + (isDrifting() ? 0 : 0.005f * speedFactor);
+        float newTraction = Mathf.LerpUnclamped(0.04f, 0.09f, traction) * speedFactor + (isDrifting() ? 0 : 0.005f * speedFactor);
 
         if (!isGrounded())
         {
@@ -1778,7 +1787,7 @@ public class CarControl : MonoBehaviour
                 //    * inputHandler.GetAcceleration() * deltaTime;
                 //rb.velocity += rb.rotation * Vector3.forward * trueMatch * Mathf.Lerp(0.5f, 1, 1 - Mathf.Pow((driftAngle - 20) / 70, 2)) * 60 * inputHandler.GetAcceleration() * deltaTime;
 
-                rb.velocity += rb.rotation * Vector3.forward * trueMatch * Mathf.Clamp01(driftAngle / (fullDriftAngle * 2)) * 60 * inputHandler.GetAcceleration() * deltaTime;
+                rb.velocity += rb.rotation * Vector3.forward * (trueMatch * 0.9f * 60 + driftAcceleration) * Mathf.Clamp01(driftAngle / (fullDriftAngle * 2)) * inputHandler.GetAcceleration() * deltaTime;
 
                 if ((status & C_GROUNDED) != 0)
                 {

@@ -245,7 +245,7 @@ public static class CarCollection
             72f,    //driftAcceleration
             0.76f,   //traction
             0.3f,   //oversteer
-            2, //tier 
+            3, //tier 
             "muscle",   
             Color.green),
 
