@@ -551,7 +551,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6684135938433840212, guid: bd4c64357cbe5c243adbfebde9ec8a7a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 86.96995
+      value: 86.82455
       objectReference: {fileID: 0}
     - target: {fileID: 6824078737726004311, guid: bd4c64357cbe5c243adbfebde9ec8a7a, type: 3}
       propertyPath: m_Size.x
@@ -863,7 +863,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6033870919658664265, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
       propertyPath: carId
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6033870919658664265, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
       propertyPath: overrideCar

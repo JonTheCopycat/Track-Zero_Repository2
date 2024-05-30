@@ -190,8 +190,8 @@ public static class CarCollection
         //12: special
         new Car(
             "sled",     
-            250f,   
-            0.85f,   
+            250f,
+            2.13f,
             2.13f,   
             10f,    
             0f,    
@@ -283,13 +283,13 @@ public static class CarCollection
         new Car(
             "understeer", 
             345,    //maxSpeed
-            1.92f, 
+            1.98f, 
             1.55f, 
             218,    //acceleration
             68,     //boostStrength
             42,     //driftAcceleration
-            0.44f, //traction
-            -0.5f,   //oversteer
+            0.62f, //traction
+            -0.3f,   //oversteer
             3, //tier
             "smooth", 
             new Color(0.2f, 0.0f, 0.4f)),
@@ -343,7 +343,7 @@ public static class CarCollection
         new Car(
             "sled prototype",
             295f,
-            0.85f + 0.7f,
+            2.13f - 0.3f,
             2.13f + 0.6f,
             122f, //acceleration
             38f, //boostStrength

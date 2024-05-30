@@ -14,11 +14,16 @@ public class BoosterBehavior : MonoBehaviour
     [SerializeField]
     TrailRenderer trailRenderer;
 
+    [SerializeField]
+    List<ParticleSystem> particleSystems;
+
     List<MeshRenderer> meshRenderers;
 
     Camera mainCamera;
 
     Vector3 baseSize;
+
+    Gradient ParticleGradient;
 
     Coroutine CurrentAnimation;
 
@@ -44,8 +49,9 @@ public class BoosterBehavior : MonoBehaviour
     {
         on = false;
         baseSize = transform.localScale;
+
         InitializeMeshRenderList();
-        SetMaterialColor(BoosterColor * 2);
+        SetMaterialColor(BoosterColor);
         SetMaterialAlpha(0);
         transform.localScale = new Vector3(0, 0, 0);
 
@@ -60,8 +66,12 @@ public class BoosterBehavior : MonoBehaviour
 
     void LateUpdate()
     {
-        transform.LookAt(mainCamera.transform);
-        transform.Rotate(0, 180, 0);
+        for (int i = 0; i < BoosterLayers.Count; i++)
+        {
+            BoosterLayers[i].transform.LookAt(mainCamera.transform);
+            BoosterLayers[i].transform.Rotate(0, 180, 0);
+        }
+            
     }
 
     public void BoostStart()
@@ -131,9 +141,17 @@ public class BoosterBehavior : MonoBehaviour
             tempMat.color = new Color(tempMat.color.r, tempMat.color.g, tempMat.color.b, alpha);
         }
 
-        tempMat = trailRenderer.material;
-        Color ogColor = tempMat.color;
-        tempMat.color = new Color(ogColor.r, ogColor.g, ogColor.b, alpha);
+        //tempMat = trailRenderer.material;
+        //Color ogColor = tempMat.color;
+        //tempMat.color = new Color(ogColor.r, ogColor.g, ogColor.b, alpha);
+
+        for (int i = 0; i < particleSystems.Count; i++)
+        {
+            var main = particleSystems[i].main;
+
+            main.startColor = new Color(1, 1, 1, alpha);
+        }
+        
     }
 
     void SetMaterialColor(Color color)
@@ -143,11 +161,43 @@ public class BoosterBehavior : MonoBehaviour
         for (int i = 0; i < BoosterLayers.Count; i++)
         {
             tempMat = meshRenderers[i].material;
-            tempMat.SetColor("_EmissionColor", color);
+            tempMat.SetColor("_EmissionColor", color * 2);
         }
 
         tempMat = trailRenderer.material;
-        tempMat.color = color;
+        tempMat.color = color * 2;
+
+        ParticleGradient = new Gradient();
+        float h = 0;
+        float s = 1;
+        float v = 1;
+        Color.RGBToHSV(color, out h, out s, out v);
+        //Debug.Log("H: " + h + " S: " + s + " V: " + v);
+        Color hueShift = Color.HSVToRGB(Mathf.Repeat(h - 0.1f, 1), s, v * 0.5f);
+        //Debug.Log("Original: " + color.ToString() + "\t Shifted: " + hueShift.ToString());
+
+        // Blend color from red at 0% to blue at 100%
+        var colors = new GradientColorKey[4];
+        colors[0] = new GradientColorKey(color + Color.white * 0.5f, 0f);
+        colors[1] = new GradientColorKey(color, 0.2f);
+        colors[2] = new GradientColorKey(hueShift, 0.5f);
+        colors[3] = new GradientColorKey(hueShift * 0.1f, 1.0f);
+
+        // Blend alpha from opaque at 0% to transparent at 100%
+        var alphas = new GradientAlphaKey[3];
+        alphas[0] = new GradientAlphaKey(0.0f, 0.0f);
+        alphas[1] = new GradientAlphaKey(1.0f, 0.2f);
+        alphas[2] = new GradientAlphaKey(0.0f, 1.0f);
+
+        ParticleGradient.SetKeys(colors, alphas);
+
+        for (int i = 0; i < particleSystems.Count; i++)
+        {
+            var col = particleSystems[i].colorOverLifetime;
+            col.enabled = true;
+
+            col.color = ParticleGradient;
+        }
     }
 
     void InitializeMeshRenderList()

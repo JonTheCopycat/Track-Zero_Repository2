@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CarControl : MonoBehaviour
 {
-    public static float speedFactor = 0.75f;
+    public static float speedFactor = 1f;
     
     protected Rigidbody rb;
     protected Car car;
@@ -283,7 +283,7 @@ public class CarControl : MonoBehaviour
             maxSpeed = car.GetMaxSpeed() * speedFactor;
             acceleration = car.GetAcceleration() * 1f * speedFactor;
             boostStrength = car.GetBoostStrength() * speedFactor;
-            driftAcceleration = car.GetDriftAcceleration();
+            driftAcceleration =  car.GetDriftAcceleration();
             traction = car.GetTraction();
             oversteer = car.GetOversteer();
         }
@@ -359,8 +359,8 @@ public class CarControl : MonoBehaviour
         if (started)
         {
             //weaken handling as speed increases, publicaly (so that other scripts that rely on this can use it without problem)
-            handling = car.GetHandling() * Mathf.LerpUnclamped(1.2f, 1f, rb.velocity.magnitude / (350 * speedFactor)) * speedFactor * 1.2f;
-            dHandling = car.GetDHandling() * Mathf.LerpUnclamped(1.2f, 1f, rb.velocity.magnitude / (350 * speedFactor)) * speedFactor * 1.2f;
+            handling = car.GetHandling() * 1f * speedFactor;
+            dHandling = car.GetDHandling() * 1f * speedFactor;
             
             CustomUpdate();
         }
@@ -999,49 +999,25 @@ public class CarControl : MonoBehaviour
 
 
                 Vector3 targetVector = Vector3.Project(rb.rotation * Vector3.forward, Vector3.Cross(collision.GetContact(0).normal, rb.rotation * Vector3.up));
-                Quaternion forwardFromNormal = Quaternion.LookRotation(targetVector, rb.rotation * Vector3.up);
+                Quaternion forwardFromNormal = Quaternion.LookRotation(targetVector, transform.up);
 
                 if (Vector3.Angle(lastVelocity, rb.velocity) > 10f)
                 {
-                    //rb.velocity = Vector3.RotateTowards(lastVelocity, Vector3.Project(rb.velocity, forwardFromNormal * Vector3.forward), 10f, 300f);
+                    rb.velocity = Vector3.RotateTowards(lastVelocity, Vector3.Project(rb.velocity, forwardFromNormal * Vector3.forward), 10f, 300f);
                 }
                 rb.position += rb.rotation * Vector3.up * 0.1f /*+ collision.GetContact(0).normal.normalized * 0.1f*/;
 
-                if (boostMeter >= 0.1f)
-                {
-                    
-                    if (Vector3.Angle(rb.transform.forward, collision.GetContact(0).normal) < 60 && Time.time - lastCollisionTime > 0.25f && Mathf.Abs(lastCollisionStrength) / 300 < boostMeter)
-                    {
-                        rb.velocity += rb.transform.forward * lastCollisionStrength * 0.5f;
-                    }
-                    else
-                    {
-                        rb.velocity -= rb.velocity.normalized * Vector3.Project(lastVelocity, -collision.GetContact(0).normal).magnitude * 0.2f;
-                    }
-                    
-                    boostMeter -= Mathf.Abs(lastCollisionStrength) / 600;
-                    doubleBoostMeter = Mathf.Clamp01(doubleBoostMeter - Mathf.Abs(lastCollisionStrength) / 450);
-                }
-                else
-                {
-                    boostMeter = 0;
-                    doubleBoostMeter = Mathf.Clamp01(doubleBoostMeter - Mathf.Abs(lastCollisionStrength) / 450);
-                    rb.velocity -= rb.velocity.normalized * Vector3.Project(lastVelocity, -collision.GetContact(0).normal).magnitude * 0.2f;
-                }
+                rb.velocity -= rb.velocity.normalized * Vector3.Project(lastVelocity, -collision.GetContact(0).normal).magnitude * 0.2f;
+                boostMeter = Mathf.Clamp01(boostMeter - Mathf.Abs(lastCollisionStrength) / 1200);
 
                 //rb.velocity += collision.GetContact(0).normal.normalized * 5f;
                 //status &= C_DRIFTING;
 
                 //smooth out collision
-                //if (transform.InverseTransformVector(collision.GetContact(0).normal).z < 0 && transform.InverseTransformVector(collision.GetContact(0).normal).z > -0.9f)
-                //{
-                //    rb.rotation = Quaternion.RotateTowards(rb.rotation, forwardFromNormal, 10f);
-                //}
-
                 if (Vector3.Angle(-collision.GetContact(0).normal, rb.rotation * Vector3.forward) < 90f)
                 {
                     rb.velocity += collision.GetContact(0).normal * 0.5f;
-                    rb.rotation = Quaternion.RotateTowards(rb.rotation, forwardFromNormal, 4f);
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, forwardFromNormal, 10f);
                 }
 
 
@@ -1107,15 +1083,10 @@ public class CarControl : MonoBehaviour
                 rb.velocity -= rb.velocity.normalized * Vector3.Project(lastVelocity, -collision.GetContact(0).normal).magnitude * 0.2f * 60 * Time.deltaTime;
 
                 //smooth out collision
-                //if (transform.InverseTransformVector(collision.GetContact(0).normal).z < 0 && transform.InverseTransformVector(collision.GetContact(0).normal).z > -0.9f)
-                //{
-                //    rb.rotation = Quaternion.RotateTowards(rb.rotation, forwardFromNormal, 10f * 60 * Time.deltaTime);
-                //}
-
                 if (Vector3.Angle(-collision.GetContact(0).normal, rb.rotation * Vector3.forward) < 90)
                 {
-                    //rb.velocity += collision.GetContact(0).normal * 20 * 60 * Time.deltaTime;
-                    rb.rotation = Quaternion.RotateTowards(rb.rotation, forwardFromNormal, 2f * 60 * Time.deltaTime);
+                    rb.velocity += collision.GetContact(0).normal * 0.25f * 60 * Time.deltaTime;
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, forwardFromNormal, 2f * 60 * Time.deltaTime);
                 }
             }
 
@@ -1297,10 +1268,7 @@ public class CarControl : MonoBehaviour
         if (isSliding())
         {
             handlingLimiter = Mathf.Clamp01(Mathf.Max(handlingLimiter, (driftAngle - fullDriftAngle) / fullDriftAngle));
-            //targetVelocity = (handling - (handling - dHandling) * Mathf.Clamp01(driftAngle * 3 / fullDriftAngle)) * inputHandler.GetSteering();
             currentHandling = handling;
-            //lerp = (Quaternion.Inverse(rb.rotation) * rb.angularVelocity).y + 6f * iceModifier *
-            //    ((currentHandling * inputHandler.GetSteering()) - (Quaternion.Inverse(rb.rotation) * rb.angularVelocity).y) * Time.deltaTime;
 
             //if drifting in the opposite direction of steering, simply turn harder.
             if (inputHandler.GetSteering() * (Quaternion.Inverse(rb.rotation) * rb.velocity).x > 0)
@@ -1323,9 +1291,7 @@ public class CarControl : MonoBehaviour
 
         if (isSliding())
         {
-            //targetVelocity = (dHandling + 0.75f) * inputHandler.GetSteering();
             currentHandling += 0.25f * inputHandler.GetBrakes();
-            //lerp = (Quaternion.Inverse(rb.rotation) * rb.angularVelocity).y + 8f * iceModifier * (((dHandling + 0.5f) * inputHandler.GetSteering()) - (Quaternion.Inverse(rb.rotation) * rb.angularVelocity).y) * Time.deltaTime;
         }
         if (inputHandler.GetAcceleration() < 0.1f)
         {
@@ -1381,7 +1347,7 @@ public class CarControl : MonoBehaviour
         //handlingVel = (Quaternion.Inverse(rb.rotation) * rb.angularVelocity).y + handlingAcc * Time.deltaTime;
 
         //exponential handling + linear minimum
-        if (Time.deltaTime == 0 || (targetVelocity - handlingVel) == 0)
+        if (Time.deltaTime == 0)
         {
             handlingAcc = 0;
         }
@@ -1393,18 +1359,18 @@ public class CarControl : MonoBehaviour
 
             if (isSliding())
             {
-                minimumResponsiveness = 2.5f;
-                exponential = 3.25f * responceModifier * (targetVelocity - handlingVel);
+                minimumResponsiveness = 8f;
+                exponential = 7f * responceModifier * (targetVelocity - handlingVel);
             }
             else if ((Mathf.Abs(targetVelocity) > Mathf.Abs(handlingVel) && handlingVel * targetVelocity > 0) || Mathf.Abs(handlingVel) < 0.01f)
             {
-                minimumResponsiveness = 1.25f;
-                exponential = 3.25f * responceModifier * (targetVelocity - handlingVel);
+                minimumResponsiveness = 6f;
+                exponential = 7f * responceModifier * (targetVelocity - handlingVel);
             }
             else
             {
-                minimumResponsiveness = 1.5f;
-                exponential = 3.25f * responceModifier * (targetVelocity - handlingVel);
+                minimumResponsiveness = 7f;
+                exponential = 7f * responceModifier * (targetVelocity - handlingVel);
             }
             float linear = minimumResponsiveness * responceModifier * (targetVelocity - handlingVel) / Mathf.Abs(targetVelocity - handlingVel);
 
@@ -1415,17 +1381,24 @@ public class CarControl : MonoBehaviour
                 minimumResponsiveness *= 0.5f;
             }
 
+            //return to 0 steering faster than normal
+            if ((targetVelocity - handlingVel) == 0 ||
+            Mathf.Abs(inputHandler.GetSteering()) <= 0.01f)
+                    minimumResponsiveness *= 1.2f; exponential *= 1.2f;
+
             if (Mathf.Abs(targetVelocity - handlingVel) / Time.deltaTime < minimumResponsiveness)
             {
                 handlingAcc = (targetVelocity - handlingVel) / Mathf.Max(Time.deltaTime, 0.00000001f);
             }
             else if (Mathf.Abs(linear) > Mathf.Abs(exponential))
             {
-                handlingAcc = Mathf.Lerp(handlingAcc, linear, 0.66f * 60 * Time.deltaTime);
+                //handlingAcc = Mathf.Lerp(handlingAcc, linear, 0.75f * 60 * Time.deltaTime);
+                handlingAcc = linear;
             }
             else
             {
-                handlingAcc = Mathf.Lerp(handlingAcc, exponential, 0.66f * 60 * Time.deltaTime);
+                //handlingAcc = Mathf.Lerp(handlingAcc, exponential, 0.75f * 60 * Time.deltaTime);
+                handlingAcc = exponential;
             }
 
         }
@@ -1631,6 +1604,7 @@ public class CarControl : MonoBehaviour
                 }
             }
         }
+
         //boost charge: charge normally when sliding, charge slower while only drifting
         if (isSliding())
         {
@@ -1639,7 +1613,7 @@ public class CarControl : MonoBehaviour
             {
                 boostMeter = Mathf.Clamp(boostMeter + inputHandler.GetEBrakes() * (0.15f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / (300 * speedFactor)) * Time.deltaTime, 0, 1);
 
-                doubleBoostMeter = Mathf.Clamp(doubleBoostMeter + inputHandler.GetEBrakes() * (0.2f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / (300 * speedFactor)) * Time.deltaTime, 0, 1);
+                //doubleBoostMeter = Mathf.Clamp(doubleBoostMeter + inputHandler.GetEBrakes() * (0.2f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / (300 * speedFactor)) * Time.deltaTime, 0, 1);
             }
         }
         if (isBraking())
@@ -1649,7 +1623,7 @@ public class CarControl : MonoBehaviour
             {
                 boostMeter = Mathf.Clamp(boostMeter + inputHandler.GetBrakes() * (0.3f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / (300 * speedFactor)) * Time.deltaTime, 0, 1);
 
-                doubleBoostMeter = Mathf.Clamp(doubleBoostMeter + inputHandler.GetBrakes() * (0.3f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / (300 * speedFactor)) * Time.deltaTime, 0, 1);
+                //doubleBoostMeter = Mathf.Clamp(doubleBoostMeter + inputHandler.GetBrakes() * (0.3f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / (300 * speedFactor)) * Time.deltaTime, 0, 1);
             }
         }
         if (isDrifting())
@@ -1660,7 +1634,7 @@ public class CarControl : MonoBehaviour
                 boostMeter = Mathf.Clamp(boostMeter + driftAngle / 45 * (0.3f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / 100) * Time.deltaTime, 0, 1);
                 if (isSliding())
                 {
-                    doubleBoostMeter = Mathf.Clamp(doubleBoostMeter + inputHandler.GetBrakes() * driftAngle / 45 * (0.3f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / 100) * Time.deltaTime, 0, 1);
+                    //doubleBoostMeter = Mathf.Clamp(doubleBoostMeter + inputHandler.GetBrakes() * driftAngle / 45 * (0.3f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / 100) * Time.deltaTime, 0, 1);
                 }
             }
         }
@@ -1679,6 +1653,44 @@ public class CarControl : MonoBehaviour
                 boostMeter = Mathf.Clamp(boostMeter + (rb.velocity.magnitude / (300 * speedFactor)) / 50 * Time.deltaTime, 0, 1);
             }
         }
+
+        //todo: sliding and boosting with the second boost bar
+        if (!isSliding())
+        {
+            //boost release
+            if (doubleBoostMeter > 0.0f)
+            {
+
+                QuickBoostRoutine = StartCoroutine(Boost(boostStrength * doubleBoostMeter * 2f, 0.2f, 0.0f));
+                status &= (byte)~C_BSTREADY;
+                doubleBoostMeter = 0;
+                elapsedSinceQuickBoost = 0;
+            }
+            else if (doubleBoostMeter <= 0.0f)
+            {
+                doubleBoostMeter = 0;
+                status &= (byte)~C_BSTREADY;
+            }
+
+        }
+        else
+        {
+            //boost charge
+            if (elapsedSinceQuickBoost >= 0.2f)
+            {
+                doubleBoostMeter = Mathf.Clamp(doubleBoostMeter + driftAngle / 45f * Time.deltaTime, 0, 1f);
+            }
+            //boost condition
+            //if (sideProjection.magnitude >= frontProjection.magnitude)
+            //{
+            //    boostReady = true;
+            //}
+            if (doubleBoostMeter >= 1)
+            {
+                status |= C_BSTREADY;
+                doubleBoostMeter = 1f;
+            }
+        }
     }
 
     private void TractionControl(float deltaTime)
@@ -1695,7 +1707,7 @@ public class CarControl : MonoBehaviour
             status &= (byte)~C_DRIFTING;
         }
 
-        float newTraction = Mathf.LerpUnclamped(0.05f, 0.1f, traction) * speedFactor + (isDrifting() ? 0 : 0.005f * speedFactor);
+        float newTraction = Mathf.LerpUnclamped(0.033f, 0.1f, traction) * speedFactor + (isDrifting() ? 0 : 0.005f * speedFactor);
 
         if (!isGrounded())
         {
@@ -1749,15 +1761,24 @@ public class CarControl : MonoBehaviour
                 //(0.5f * (currentTraction - 0.05f) + 0.05f)
                 //Mathf.Clamp01(driftAngle / (fullDriftAngle * 2))
 
-                //true match + capped (2.?)
-                //float standInSpeed = 50f;
+                //true match + capped (2.9)
+                float standInSpeed = 50f;
                 float trueMatch = 0;
                 float discriminant = frontProjection.magnitude * frontProjection.magnitude + rawFriction * (2 * sideProjection.magnitude - rawFriction);
                 if (discriminant > 0)
                     //rb.velocity += rb.rotation * Vector3.forward * (-frontProjection.magnitude + Mathf.Sqrt(discriminant)) * 0.9f * 60 * deltaTime;
                     trueMatch = (-frontProjection.magnitude + Mathf.Sqrt(discriminant));
 
-                rb.velocity += rb.rotation * Vector3.forward * Mathf.Min(trueMatch * Mathf.Lerp(0.5f, 1, 1 - Mathf.Pow((driftAngle - 20) / 70, 2)) * 60, driftAcceleration * 3f + 75f/*, driftAngle / 90*/) * inputHandler.GetAcceleration() * deltaTime;
+                //rb.velocity += rb.rotation 
+                //    * Vector3.forward 
+                //    * Mathf.Min(
+                //        trueMatch * Mathf.Lerp(0.5f, 1, 1 - Mathf.Pow((driftAngle - 20) / 70, 2)) * 60, 
+                //        driftAcceleration * 3f + 75f + (trueMatch * Mathf.Lerp(0.5f, 1, 1 - Mathf.Pow((driftAngle - 20) / 70, 2)) * 60) * 0.2f/*, driftAngle / 90*/
+                //    ) 
+                //    * inputHandler.GetAcceleration() * deltaTime;
+                //rb.velocity += rb.rotation * Vector3.forward * trueMatch * Mathf.Lerp(0.5f, 1, 1 - Mathf.Pow((driftAngle - 20) / 70, 2)) * 60 * inputHandler.GetAcceleration() * deltaTime;
+
+                rb.velocity += rb.rotation * Vector3.forward * trueMatch * Mathf.Clamp01(driftAngle / (fullDriftAngle * 2)) * 60 * inputHandler.GetAcceleration() * deltaTime;
 
                 if ((status & C_GROUNDED) != 0)
                 {
@@ -1828,10 +1849,9 @@ public class CarControl : MonoBehaviour
     public void Respawn()
     {
         Debug.Log("Respawn Called");
-        rb.rotation = Quaternion.LookRotation(inputHandler.GetLastPoint().GetDir(), inputHandler.GetLastPoint().GetNormal());
+        transform.localRotation = Quaternion.LookRotation(inputHandler.GetLastPoint().GetDir(), inputHandler.GetLastPoint().GetNormal());
         currentUp = inputHandler.GetLastPoint().GetNormal();
         rb.position = inputHandler.GetLastPoint().GetPos() + currentUp * 2f;
-        rb.angularVelocity = Vector3.zero;
         rb.velocity = Vector3.zero;
         boostsReady = 0;
         boostMeter = boostMeter * 0.3f - 0.1f;
@@ -1933,20 +1953,6 @@ public class CarControl : MonoBehaviour
             //{
             //    rb.velocity += rb.rotation * Vector3.forward * ((maxSpeed + strength) - rb.velocity.magnitude) * 0.66f * Time.deltaTime;
             //}
-
-            if (doubleBoostMeter > 0f)
-            {
-                status |= C_DBSTING;
-
-                rb.velocity += rb.rotation * Vector3.forward * Mathf.Pow(0.994f, frontProjection.magnitude / speedFactor - 200) * strength * Time.deltaTime;
-
-                doubleBoostMeter -= drain * Time.deltaTime;
-            }
-            else
-            {
-                doubleBoostMeter = 0;
-                status &= (short)~C_DBSTING;
-            }
             rb.velocity += rb.rotation * Vector3.forward * Mathf.Pow(0.996f, frontProjection.magnitude / speedFactor - 200) * strength * Time.deltaTime;
 
             boostMeter -= drain * Time.deltaTime;

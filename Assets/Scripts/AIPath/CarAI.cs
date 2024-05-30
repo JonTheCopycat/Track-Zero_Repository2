@@ -378,6 +378,8 @@ public class CarAI : MonoBehaviour
                 {
                     lastRespawnPoint = lastPoint;
                 }
+                aiPath.GetPointById(lastPoint).GetDir();
+                Debug.DrawRay(rb.position + transform.up, aiPath.GetPointById(lastPoint).GetDir(), Color.red, Time.deltaTime);
 
                 //Debug.Log("widths: " + line.Item1.GetWidth());
                 Vector3 testPosition = rb.position + rb.velocity.normalized * -4;

@@ -421,7 +421,7 @@ public class IngameUI : MonoBehaviour
                     finishText.text += " (New Best!)";
                 finishText.text += "\n";
 
-                finishText.text += "Lap Time Record: " + FormatTime(bestLapTime);
+                finishText.text += "Fastest Lap Record: " + FormatTime(bestLapTime);
                 if (newLapBest)
                     finishText.text += " (New Best!)";
                 
@@ -465,7 +465,7 @@ public class IngameUI : MonoBehaviour
                 finishText.text += "Car Time Record: " + FormatTime(bestCarTime);
                 finishText.text += "\n";
 
-                finishText.text += "Lap Time Record: " + FormatTime(bestLapTime);
+                finishText.text += "Fastest Lap Record: " + FormatTime(bestLapTime);
 
             }
         }

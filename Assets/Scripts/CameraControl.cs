@@ -51,7 +51,7 @@ public class CameraControl : MonoBehaviour
         lastRotation = new Queue<Quaternion>();
         if (target == null)
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 2; i++)
                 lastRotation.Enqueue(Quaternion.identity);
             
         }
@@ -149,9 +149,9 @@ public class CameraControl : MonoBehaviour
                 //    Vector3.RotateTowards(rawRotDirection * Vector3.up, carDirection * Vector3.up, 
                 //    Mathf.Clamp(Vector3.Angle(rawRotDirection * Vector3.up, lastRotationDirection * Vector3.up) * Mathf.Deg2Rad - Mathf.PI * 0.25f * Time.deltaTime, 0, Mathf.PI * 0.125f), 0)
                 //    );
-                finalPosDirection = Quaternion.Lerp(lastPositionDirection, Quaternion.Lerp(speedDirection, carDirection, 0.3f),
-                    0.1f * 60 * Time.deltaTime);
-                finalRotDirection = Quaternion.Lerp(lastRotationDirection, Quaternion.Lerp(speedDirection, carDirection, 0.6f), 0.2f * 60 * Time.deltaTime);
+                finalPosDirection = Quaternion.Lerp(lastPositionDirection, Quaternion.Lerp(speedDirection, carDirection, 0.2f),
+                    0.5f * 60 * Time.deltaTime);
+                finalRotDirection = Quaternion.Lerp(lastRotationDirection, Quaternion.Lerp(speedDirection, carDirection, 0.3f), 0.6f * 60 * Time.deltaTime);
 
                 //finalPosDirection = Quaternion.Lerp(speedDirection, carDirection, 0.15f);
                 //finalRotDirection = Quaternion.Lerp(speedDirection, carDirection, 0.2f);
@@ -310,7 +310,7 @@ public class CameraControl : MonoBehaviour
             //transform.rotation = postOffsetRotDirection;
             //transform.rotation = finalDirection;
             transform.rotation = postOffsetRotDirection;
-            transform.position = target.transform.position + finalPosDirection * offset + extraOffset + boostOffset + shakeOffset;
+            transform.position = target.transform.position + finalPosDirection * offset + extraOffset + boostOffset + shakeOffset + Vector3.ClampMagnitude(-velocity * 0.005f, 2f);
 
             lastPositionDirection = finalPosDirection;
             lastRotationDirection = postOffsetRotDirection;
