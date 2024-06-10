@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UISystems;
+using Cars;
+using CarBehaviour;
+using Replays;
+using AI;
 
 
 public class Spawner : MonoBehaviour
@@ -64,7 +69,8 @@ public class Spawner : MonoBehaviour
         GameSettings.gamemode = gamemode;
         
         CarAI.aiPath = PathDataManager.LoadAIPath(ScreenManager.current.GetSceneName());
-        CarAI.aiPath.CalculateMaxDepth();
+        if (CarAI.aiPath.GetSize() > 0)
+            CarAI.aiPath.CalculateMaxDepth();
         CarControl.normalGravity = normalGravity;
         
         int carsInARow;

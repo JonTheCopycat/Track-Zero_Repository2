@@ -3,112 +3,115 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-[Serializable]
-public class ReplayFrame
+namespace Replays
 {
-    //the time of this frame
-    float time;
-
-    //pure inputs
-    float acceleration, brakes, steering, ebrake;
-    bool boost, drift, respawn;
-
-    //replicating position: interpolated
-    float[] position;
-    float[] rotation;
-
-    //to be used for interpolation of frames
-    public ReplayFrame(float time, Vector3 pos, Quaternion rot, float acc, float st, float br, float ebr, bool boo, bool dr, bool res)
+    [Serializable]
+    public class ReplayFrame
     {
-        this.time = time;
-        acceleration = acc;
-        brakes = br;
-        steering = st;
-        ebrake = ebr;
-        boost = boo;
-        drift = dr;
-        respawn = res;
+        //the time of this frame
+        float time;
 
-        position = new float[3];
-        position[0] = pos.x;
-        position[1] = pos.y;
-        position[2] = pos.z;
+        //pure inputs
+        float acceleration, brakes, steering, ebrake;
+        bool boost, drift, respawn;
 
-        rotation = new float[3];
-        rotation[0] = rot.eulerAngles.x;
-        rotation[1] = rot.eulerAngles.y;
-        rotation[2] = rot.eulerAngles.z;
-    }
+        //replicating position: interpolated
+        float[] position;
+        float[] rotation;
 
-    public ReplayFrame(float time, Vector3 pos, Quaternion rot)
-    {
-        this.time = time;
-        acceleration = 0;
-        brakes = 0;
-        steering = 0;
-        ebrake = 0;
-        boost = false;
-        drift = false;
-        respawn = false;
+        //to be used for interpolation of frames
+        public ReplayFrame(float time, Vector3 pos, Quaternion rot, float acc, float st, float br, float ebr, bool boo, bool dr, bool res)
+        {
+            this.time = time;
+            acceleration = acc;
+            brakes = br;
+            steering = st;
+            ebrake = ebr;
+            boost = boo;
+            drift = dr;
+            respawn = res;
 
-        position = new float[3];
-        position[0] = pos.x;
-        position[1] = pos.y;
-        position[2] = pos.z;
+            position = new float[3];
+            position[0] = pos.x;
+            position[1] = pos.y;
+            position[2] = pos.z;
 
-        rotation = new float[3];
-        rotation[0] = rot.eulerAngles.x;
-        rotation[1] = rot.eulerAngles.y;
-        rotation[2] = rot.eulerAngles.z;
-    }
+            rotation = new float[3];
+            rotation[0] = rot.eulerAngles.x;
+            rotation[1] = rot.eulerAngles.y;
+            rotation[2] = rot.eulerAngles.z;
+        }
 
-    public float GetTime()
-    {
-        return time;
-    }
+        public ReplayFrame(float time, Vector3 pos, Quaternion rot)
+        {
+            this.time = time;
+            acceleration = 0;
+            brakes = 0;
+            steering = 0;
+            ebrake = 0;
+            boost = false;
+            drift = false;
+            respawn = false;
 
-    public float GetAcceleration()
-    {
-        return acceleration;
-    }
+            position = new float[3];
+            position[0] = pos.x;
+            position[1] = pos.y;
+            position[2] = pos.z;
 
-    public float GetBrakes()
-    {
-        return brakes;
-    }
+            rotation = new float[3];
+            rotation[0] = rot.eulerAngles.x;
+            rotation[1] = rot.eulerAngles.y;
+            rotation[2] = rot.eulerAngles.z;
+        }
 
-    public float GetSteering()
-    {
-        return steering;
-    }
+        public float GetTime()
+        {
+            return time;
+        }
 
-    public float GetEBrake()
-    {
-        return ebrake;
-    }
+        public float GetAcceleration()
+        {
+            return acceleration;
+        }
 
-    public bool GetBoost()
-    {
-        return boost;
-    }
+        public float GetBrakes()
+        {
+            return brakes;
+        }
 
-    public bool GetDrift()
-    {
-        return drift;
-    }
+        public float GetSteering()
+        {
+            return steering;
+        }
 
-    public bool GetRespawn()
-    {
-        return respawn;
-    }
+        public float GetEBrake()
+        {
+            return ebrake;
+        }
 
-    public Vector3 GetPosition()
-    {
-        return new Vector3(position[0], position[1], position[2]);
-    }
+        public bool GetBoost()
+        {
+            return boost;
+        }
 
-    public Quaternion GetRotation()
-    {
-        return Quaternion.Euler(rotation[0], rotation[1], rotation[2]);
+        public bool GetDrift()
+        {
+            return drift;
+        }
+
+        public bool GetRespawn()
+        {
+            return respawn;
+        }
+
+        public Vector3 GetPosition()
+        {
+            return new Vector3(position[0], position[1], position[2]);
+        }
+
+        public Quaternion GetRotation()
+        {
+            return Quaternion.Euler(rotation[0], rotation[1], rotation[2]);
+        }
     }
 }

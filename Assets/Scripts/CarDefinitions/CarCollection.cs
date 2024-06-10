@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class CarCollection
+namespace Cars
 {
-
-
-    static Car[] cars =
+    public static class CarCollection
     {
+
+
+        static Car[] cars =
+        {
         //0 (tier 1)
         new Car(
             "starter1",
@@ -69,10 +71,10 @@ public static class CarCollection
             new Color(33, 33, 40) / 255),
 
         new Car(
-            "drift",    
+            "drift",
             310,    //maxSpeed
             2.24f, //used to be 1.54f  
-            2.54f,     
+            2.54f,
             102f,   //acceleration
             120f,  //brakes
             32f,   //boostStrength 
@@ -84,47 +86,47 @@ public static class CarCollection
 
         //5: tier 2
         new Car(
-            "tuner",    
-            288,    
+            "tuner",
+            288,
             2.4f, //1.62f   
-            2.6f,     
+            2.6f,
             93f, //acceleration
             64f,   //booststrength 
             50f,    //driftAcceleration
             0.7f,   //traction
             0.23f,   //oversteer
             2, //tier
-            "f2", 
+            "f2",
             new Color(91, 13, 186) / 255),
         
         //6: tier 2
         new Car(
-            "balance",  
-            300,    
-            2.05f,   
-            2.1f,  
-            110f,  
-            50f,    
+            "balance",
+            300,
+            2.05f,
+            2.1f,
+            110f,
+            50f,
             40f,
             0.45f,
             0.05f,   //oversteer
             2, //tier 
-            "smooth", 
+            "smooth",
             new Color(153, 153, 153) / 255),
 
         //7: tier 2
         new Car(
-            "muscle",   
-            330,    
+            "muscle",
+            330,
             1.5f,  //0.97
-            1.7f,     
-            142f,  
-            20f,    
+            1.7f,
+            142f,
+            20f,
             44f,
             0.3f,
             0.45f,   //oversteer
             2, //tier
-            "muscle", 
+            "muscle",
             new Color(0.1f, 0.5f, 0.8f)),
 
         //8: tier 2.5
@@ -143,10 +145,10 @@ public static class CarCollection
 
         //9: tier 2
         new Car(
-            "grip",     
-            332,    
-            2.1f,     
-            1.14f,   
+            "grip",
+            332,
+            2.1f,
+            1.14f,
             132f,   //acceleration
             165f,  //brakes
             37f,    //boostStrength
@@ -158,25 +160,25 @@ public static class CarCollection
 
         //10: tier 3
         new Car(
-            "trueno8600x", 
+            "trueno8600x",
             281,
             2.72f,     //1.58f
-            2.96f,     
+            2.96f,
             130f,    //acceleration
             68f,    //boostStrength
             42f,    //driftAcceleration
             0.33f,  //traction
             0.25f,   //oversteer
             2, //tier
-            "sidebooster", 
+            "sidebooster",
             Color.white),
 
         //11: tier 2
         new Car(
-            "exotic",   
-            314,    
-            1.7f,   
-            1.5f,   
+            "exotic",
+            314,
+            1.7f,
+            1.5f,
             250f,    //acceleration
             170,    //brakes
             33f,    //boostStrength
@@ -184,30 +186,30 @@ public static class CarCollection
             0.55f,  //traction
             -0.1f,   //oversteer
             2, //tier 
-            "smooth", 
+            "smooth",
             new Color(0.1f, 0.1f, 0.1f)),
 
         //12: special
         new Car(
-            "sled",     
+            "sled",
             250f,
             2.13f,
-            2.13f,   
-            10f,    
-            0f,    
-            120f,     
+            2.13f,
+            10f,
+            0f,
+            120f,
             -0.25f,
             0.15f,   //oversteer
             4, //tier
-            "sidebooster", 
+            "sidebooster",
             new Color(0.8f, 1, 1)),
 
         //13: tier 2
         new Car(
-            "slow god",     
-            270f,   
-            2.8f,   
-            3f,   
+            "slow god",
+            270f,
+            2.8f,
+            3f,
             172f,    //acceleration
             100f,   //brakes
             40f,     //boostStrength
@@ -215,15 +217,15 @@ public static class CarCollection
             0.72f,    //traction
             -0.2f,   //oversteer
             2, //tier
-            "sidebooster", 
+            "sidebooster",
             new Color(0.1f, 0.3f, 0.6f)),
 
         //14: tier 2
         new Car(
-            "hover car", 
+            "hover car",
             276f,
             2.3f,     //1.3f
-            2.65f,    
+            2.65f,
             108f,    //acceleration
             100f,    //brakes
             65f,    //boostStrength
@@ -235,10 +237,10 @@ public static class CarCollection
 
         //15: tier 2
         new Car(
-            "speedster", 
-            332,     
-            1.4f,   
-            1.4f,   
+            "speedster",
+            332,
+            1.4f,
+            1.4f,
             60,    //acceleration
             100,   //brakes
             80,    //boostStrength
@@ -246,52 +248,52 @@ public static class CarCollection
             0.76f,   //traction
             0.3f,   //oversteer
             3, //tier 
-            "muscle",   
+            "muscle",
             Color.green),
 
         //16: tier 2
         new Car(
-            "weird", 
+            "weird",
             292,
             2f, //2.56f
-            1.9f, 
+            1.9f,
             130f,   //acceleration
             92f,   //boostStrength
             36,    //driftAcceleration
             0.76f,    //traction
             -0.25f,   //oversteer
             2, //tier
-            "sled-galarian", 
+            "sled-galarian",
             (Color.red + Color.yellow)),
 
         //18: tier 3
         new Car(
-            "burst", 
+            "burst",
             322, //maxSpeed
-            1.64f, 
-            1.95f, 
+            1.64f,
+            1.95f,
             235, //acceleration
             82, //boostStrength
             56, //driftAcceleration
             0.62f,  //traction
             0.1f,   //oversteer
             3, //tier
-            "smooth", 
+            "smooth",
             new Color(0.8f, 0.1f, 0.4f)),
 
         //19: tier 3
         new Car(
-            "understeer", 
+            "understeer",
             345,    //maxSpeed
-            1.98f, 
-            1.55f, 
+            1.98f,
+            1.55f,
             218,    //acceleration
             68,     //boostStrength
             42,     //driftAcceleration
             0.62f, //traction
             -0.3f,   //oversteer
             3, //tier
-            "smooth", 
+            "smooth",
             new Color(0.2f, 0.0f, 0.4f)),
 
         //20: tier 3
@@ -356,112 +358,113 @@ public static class CarCollection
 
         //99 special
         new Car(
-            "random",   
-            Random.Range(250, 350), 
-            Random.Range(0.5f, 3.5f), 
-            Random.Range(0.5f, 3.5f), 
-            Random.Range(20f, 256f), 
-            Random.Range(10, 100), 
-            Random.Range(0, 60), 
+            "random",
+            Random.Range(250, 350),
+            Random.Range(0.5f, 3.5f),
+            Random.Range(0.5f, 3.5f),
+            Random.Range(20f, 256f),
+            Random.Range(10, 100),
+            Random.Range(0, 60),
             Random.Range(-0.1f, 1.1f),
             Random.Range(-0.4f, 0.6f),   //oversteer
             4, //tier
-            "sled-galarian", 
+            "sled-galarian",
             new Color(Random.value, Random.value, Random.value))
     };
 
-    public static List<int>[] allTiers;
+        public static List<int>[] allTiers;
 
-    public static void InitializeTiers()
-    {
-        if (allTiers == null)
+        public static void InitializeTiers()
         {
-            allTiers = new List<int>[4];
-
-            for (int i = 0; i < allTiers.Length; i++)
+            if (allTiers == null)
             {
-                allTiers[i] = new List<int>();
-            }
+                allTiers = new List<int>[4];
 
-            for (int i = 0; i < GetCarList().Length; i++)
-            {
-                allTiers[FindCarByIndex(i).GetTier() - 1].Add(i);
+                for (int i = 0; i < allTiers.Length; i++)
+                {
+                    allTiers[i] = new List<int>();
+                }
+
+                for (int i = 0; i < GetCarList().Length; i++)
+                {
+                    allTiers[FindCarByIndex(i).GetTier() - 1].Add(i);
+                }
             }
         }
-    }
 
-    public static int localCarIndex = 0;
+        public static int localCarIndex = 0;
 
-    public static int GetCarCount()
-    {
-        return cars.Length;
-    }
-
-    public static Car FindCarByName(string name)
-    {
-        for (int i = 0; i < cars.Length; i++)
+        public static int GetCarCount()
         {
-            if (cars[i].GetName().Equals(name))
-            {
-                return cars[i];
-            }
+            return cars.Length;
         }
-        return null;
-    }
 
-    public static Car FindCarByIndex(int index)
-    {
-        return cars[index];
-    }
-
-    public static Car[] GetCarList()
-    {
-        return cars;
-    }
-
-    public static int GetIndex(Car car)
-    {
-        for (int i = 0; i < cars.Length; i++)
+        public static Car FindCarByName(string name)
         {
-            if (cars[i].Equals(car))
+            for (int i = 0; i < cars.Length; i++)
             {
-                return i;
+                if (cars[i].GetName().Equals(name))
+                {
+                    return cars[i];
+                }
             }
+            return null;
         }
-        return -1;
-    }
 
-    public static int GetIndex(string name)
-    {
-        for (int i = 0; i < cars.Length; i++)
+        public static Car FindCarByIndex(int index)
         {
-            if (cars[i].GetName().Equals(name))
-            {
-                return i;
-            }
+            return cars[index];
         }
-        return -1;
-    }
 
-    public static void PickLocalCar(string carName)
-    {
-        localCarIndex = GetIndex(carName);
-    }
+        public static Car[] GetCarList()
+        {
+            return cars;
+        }
 
-    public static void PickLocalCar(int index)
-    {
-        localCarIndex = index;
-    }
+        public static int GetIndex(Car car)
+        {
+            for (int i = 0; i < cars.Length; i++)
+            {
+                if (cars[i].Equals(car))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
 
-    public static void DisplayStats(int index)
-    {
-        Debug.Log("maxSpeed: " + cars[index].GetMaxSpeed() + "\n" +
-            "acc: " + cars[index].GetAcceleration() + "\n" +
-            "d-acc " + cars[index].GetDriftAcceleration() + "\n" +
-            "hand " + cars[index].GetHandling() + "\n" +
-            "d-hand " + cars[index].GetDHandling() + "\n" +
-            "boost: " + cars[index].GetBoostStrength() + "\n" +
-            "traction: " + cars[index].GetTraction() + "\n");
-    }
+        public static int GetIndex(string name)
+        {
+            for (int i = 0; i < cars.Length; i++)
+            {
+                if (cars[i].GetName().Equals(name))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
 
+        public static void PickLocalCar(string carName)
+        {
+            localCarIndex = GetIndex(carName);
+        }
+
+        public static void PickLocalCar(int index)
+        {
+            localCarIndex = index;
+        }
+
+        public static void DisplayStats(int index)
+        {
+            Debug.Log("maxSpeed: " + cars[index].GetMaxSpeed() + "\n" +
+                "acc: " + cars[index].GetAcceleration() + "\n" +
+                "d-acc " + cars[index].GetDriftAcceleration() + "\n" +
+                "hand " + cars[index].GetHandling() + "\n" +
+                "d-hand " + cars[index].GetDHandling() + "\n" +
+                "boost: " + cars[index].GetBoostStrength() + "\n" +
+                "traction: " + cars[index].GetTraction() + "\n");
+        }
+
+    }
 }

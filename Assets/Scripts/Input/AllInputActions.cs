@@ -37,6 +37,15 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""G_Pitch"",
+                    ""type"": ""Button"",
+                    ""id"": ""4b2263d2-dc60-4b37-bcad-a24d05594907"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""G_Accelerate"",
                     ""type"": ""Button"",
                     ""id"": ""192ba44a-bf11-4a55-bb09-5698a32de1d7"",
@@ -106,7 +115,7 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""44696f26-d615-4bda-a16a-075dbb623ec8"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad;Joystick"",
@@ -190,6 +199,39 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""G_Brake"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Gamepad"",
+                    ""id"": ""a908322e-ace3-47d0-ad99-a003b7f0b0c2"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": ""Normalize(min=-1,max=1)"",
+                    ""groups"": """",
+                    ""action"": ""G_Pitch"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""864412b2-af11-4287-bcb8-c62c9c09572b"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""G_Pitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""9f254732-121e-48c5-83ce-83a0f8b5cdec"",
+                    ""path"": ""<Gamepad>/leftStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""G_Pitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -201,6 +243,15 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""K_Steer"",
                     ""type"": ""Button"",
                     ""id"": ""059ab582-7154-45c6-985c-21a9f81a11b1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""K_Pitch"",
+                    ""type"": ""Button"",
+                    ""id"": ""fc1bd901-8ee8-4c7f-bde8-b2a7a1f8830b"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -265,7 +316,7 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""972b9fc6-717b-4db5-94f9-8afedb308278"",
-                    ""path"": ""<Keyboard>/upArrow"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -360,6 +411,39 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""K_Brake"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Keyboard"",
+                    ""id"": ""b10c085a-8c94-4251-8f9e-f06215271027"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""K_Pitch"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""b262acbb-af0d-4827-abce-933efd55a550"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""K_Pitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""406ecbbb-8698-4d01-a5cd-e3ba2f37a92f"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""K_Pitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -902,6 +986,7 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
         // Gamepad
         m_Gamepad = asset.FindActionMap("Gamepad", throwIfNotFound: true);
         m_Gamepad_G_Steer = m_Gamepad.FindAction("G_Steer", throwIfNotFound: true);
+        m_Gamepad_G_Pitch = m_Gamepad.FindAction("G_Pitch", throwIfNotFound: true);
         m_Gamepad_G_Accelerate = m_Gamepad.FindAction("G_Accelerate", throwIfNotFound: true);
         m_Gamepad_G_Brake = m_Gamepad.FindAction("G_Brake", throwIfNotFound: true);
         m_Gamepad_G_EBrake = m_Gamepad.FindAction("G_EBrake", throwIfNotFound: true);
@@ -911,6 +996,7 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
         // Keyboard
         m_Keyboard = asset.FindActionMap("Keyboard", throwIfNotFound: true);
         m_Keyboard_K_Steer = m_Keyboard.FindAction("K_Steer", throwIfNotFound: true);
+        m_Keyboard_K_Pitch = m_Keyboard.FindAction("K_Pitch", throwIfNotFound: true);
         m_Keyboard_K_Accelerate = m_Keyboard.FindAction("K_Accelerate", throwIfNotFound: true);
         m_Keyboard_K_Brake = m_Keyboard.FindAction("K_Brake", throwIfNotFound: true);
         m_Keyboard_K_EBrake = m_Keyboard.FindAction("K_EBrake", throwIfNotFound: true);
@@ -991,6 +1077,7 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Gamepad;
     private List<IGamepadActions> m_GamepadActionsCallbackInterfaces = new List<IGamepadActions>();
     private readonly InputAction m_Gamepad_G_Steer;
+    private readonly InputAction m_Gamepad_G_Pitch;
     private readonly InputAction m_Gamepad_G_Accelerate;
     private readonly InputAction m_Gamepad_G_Brake;
     private readonly InputAction m_Gamepad_G_EBrake;
@@ -1002,6 +1089,7 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
         private @AllInputActions m_Wrapper;
         public GamepadActions(@AllInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @G_Steer => m_Wrapper.m_Gamepad_G_Steer;
+        public InputAction @G_Pitch => m_Wrapper.m_Gamepad_G_Pitch;
         public InputAction @G_Accelerate => m_Wrapper.m_Gamepad_G_Accelerate;
         public InputAction @G_Brake => m_Wrapper.m_Gamepad_G_Brake;
         public InputAction @G_EBrake => m_Wrapper.m_Gamepad_G_EBrake;
@@ -1020,6 +1108,9 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
             @G_Steer.started += instance.OnG_Steer;
             @G_Steer.performed += instance.OnG_Steer;
             @G_Steer.canceled += instance.OnG_Steer;
+            @G_Pitch.started += instance.OnG_Pitch;
+            @G_Pitch.performed += instance.OnG_Pitch;
+            @G_Pitch.canceled += instance.OnG_Pitch;
             @G_Accelerate.started += instance.OnG_Accelerate;
             @G_Accelerate.performed += instance.OnG_Accelerate;
             @G_Accelerate.canceled += instance.OnG_Accelerate;
@@ -1045,6 +1136,9 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
             @G_Steer.started -= instance.OnG_Steer;
             @G_Steer.performed -= instance.OnG_Steer;
             @G_Steer.canceled -= instance.OnG_Steer;
+            @G_Pitch.started -= instance.OnG_Pitch;
+            @G_Pitch.performed -= instance.OnG_Pitch;
+            @G_Pitch.canceled -= instance.OnG_Pitch;
             @G_Accelerate.started -= instance.OnG_Accelerate;
             @G_Accelerate.performed -= instance.OnG_Accelerate;
             @G_Accelerate.canceled -= instance.OnG_Accelerate;
@@ -1085,6 +1179,7 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Keyboard;
     private List<IKeyboardActions> m_KeyboardActionsCallbackInterfaces = new List<IKeyboardActions>();
     private readonly InputAction m_Keyboard_K_Steer;
+    private readonly InputAction m_Keyboard_K_Pitch;
     private readonly InputAction m_Keyboard_K_Accelerate;
     private readonly InputAction m_Keyboard_K_Brake;
     private readonly InputAction m_Keyboard_K_EBrake;
@@ -1096,6 +1191,7 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
         private @AllInputActions m_Wrapper;
         public KeyboardActions(@AllInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @K_Steer => m_Wrapper.m_Keyboard_K_Steer;
+        public InputAction @K_Pitch => m_Wrapper.m_Keyboard_K_Pitch;
         public InputAction @K_Accelerate => m_Wrapper.m_Keyboard_K_Accelerate;
         public InputAction @K_Brake => m_Wrapper.m_Keyboard_K_Brake;
         public InputAction @K_EBrake => m_Wrapper.m_Keyboard_K_EBrake;
@@ -1114,6 +1210,9 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
             @K_Steer.started += instance.OnK_Steer;
             @K_Steer.performed += instance.OnK_Steer;
             @K_Steer.canceled += instance.OnK_Steer;
+            @K_Pitch.started += instance.OnK_Pitch;
+            @K_Pitch.performed += instance.OnK_Pitch;
+            @K_Pitch.canceled += instance.OnK_Pitch;
             @K_Accelerate.started += instance.OnK_Accelerate;
             @K_Accelerate.performed += instance.OnK_Accelerate;
             @K_Accelerate.canceled += instance.OnK_Accelerate;
@@ -1139,6 +1238,9 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
             @K_Steer.started -= instance.OnK_Steer;
             @K_Steer.performed -= instance.OnK_Steer;
             @K_Steer.canceled -= instance.OnK_Steer;
+            @K_Pitch.started -= instance.OnK_Pitch;
+            @K_Pitch.performed -= instance.OnK_Pitch;
+            @K_Pitch.canceled -= instance.OnK_Pitch;
             @K_Accelerate.started -= instance.OnK_Accelerate;
             @K_Accelerate.performed -= instance.OnK_Accelerate;
             @K_Accelerate.canceled -= instance.OnK_Accelerate;
@@ -1340,6 +1442,7 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
     public interface IGamepadActions
     {
         void OnG_Steer(InputAction.CallbackContext context);
+        void OnG_Pitch(InputAction.CallbackContext context);
         void OnG_Accelerate(InputAction.CallbackContext context);
         void OnG_Brake(InputAction.CallbackContext context);
         void OnG_EBrake(InputAction.CallbackContext context);
@@ -1350,6 +1453,7 @@ public partial class @AllInputActions: IInputActionCollection2, IDisposable
     public interface IKeyboardActions
     {
         void OnK_Steer(InputAction.CallbackContext context);
+        void OnK_Pitch(InputAction.CallbackContext context);
         void OnK_Accelerate(InputAction.CallbackContext context);
         void OnK_Brake(InputAction.CallbackContext context);
         void OnK_EBrake(InputAction.CallbackContext context);

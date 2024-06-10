@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
+using CarBehaviour;
 
 public class CameraControl : MonoBehaviour
 {

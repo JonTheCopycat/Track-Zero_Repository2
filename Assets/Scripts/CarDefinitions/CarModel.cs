@@ -2,19 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarModel : MonoBehaviour
+namespace Cars
 {
-    public MeshRenderer CarBodyRenderer;
-    public GameObject[] FrontTires = new GameObject[2];
-    public GameObject[] RearTires = new GameObject[2];
-    public BoosterBehavior[] Boosters;
-    public AudioScriptableObject soundProfile;
-
-    public Vector2 GetHitboxSize()
+    public class CarModel : MonoBehaviour
     {
-        float width = Mathf.Abs(FrontTires[0].transform.localPosition.x - FrontTires[1].transform.localPosition.x);
-        float length = Mathf.Abs(FrontTires[0].transform.localPosition.z - RearTires[0].transform.localPosition.z) * 0.75f;
+        public MeshRenderer CarBodyRenderer;
+        public GameObject[] FrontTires = new GameObject[2];
+        public GameObject[] RearTires = new GameObject[2];
+        public BoosterBehavior[] Boosters;
+        public AudioScriptableObject soundProfile;
 
-        return new Vector2(width, length);
+        public Vector2 GetHitboxSize()
+        {
+            float width = Mathf.Abs(FrontTires[0].transform.localPosition.x - FrontTires[1].transform.localPosition.x);
+            float length = Mathf.Abs(FrontTires[0].transform.localPosition.z - RearTires[0].transform.localPosition.z) * 0.75f;
+
+            return new Vector2(width, length);
+        }
     }
 }

@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CheckpointList : MonoBehaviour
+namespace UISystems
 {
-    public List<GameObject> list;
+    public class CheckpointList : MonoBehaviour
+    {
+        public List<GameObject> list;
+    }
 }

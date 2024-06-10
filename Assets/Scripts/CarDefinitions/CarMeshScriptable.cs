@@ -2,42 +2,45 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CarMeshScriptableObject", menuName = "ScriptableObjects/CarMeshs")]
-public class CarMeshScriptable : ScriptableObject
+namespace Cars
 {
-    public GameObject[] carModels;
-    public string[] carModelNames;
-
-    public Dictionary<string, GameObject> carModelLibrary = new Dictionary<string, GameObject>();
-
-    private void OnValidate()
+    [CreateAssetMenu(fileName = "CarMeshScriptableObject", menuName = "ScriptableObjects/CarMeshs")]
+    public class CarMeshScriptable : ScriptableObject
     {
-        for (int i = 0; i < carModelNames.Length; i++)
-        {
-            carModelLibrary.Add(carModelNames[i], carModels[i]);
-        }
-    }
+        public GameObject[] carModels;
+        public string[] carModelNames;
 
-    public GameObject GetGameObject(string name)
-    {
-        
+        public Dictionary<string, GameObject> carModelLibrary = new Dictionary<string, GameObject>();
 
-        GameObject result;
-        if (carModelLibrary.TryGetValue(name, out result))
+        private void OnValidate()
         {
-            return result;
-        }
-        else
-        {
-            for (int i = 0; i < carModels.Length; i++)
+            for (int i = 0; i < carModelNames.Length; i++)
             {
-                if (carModelNames[i].Equals(name))
-                {
-                    return carModels[i];
-                }
+                carModelLibrary.Add(carModelNames[i], carModels[i]);
             }
-            Debug.LogError("Using an invalid car name");
-            return null;
+        }
+
+        public GameObject GetGameObject(string name)
+        {
+
+
+            GameObject result;
+            if (carModelLibrary.TryGetValue(name, out result))
+            {
+                return result;
+            }
+            else
+            {
+                for (int i = 0; i < carModels.Length; i++)
+                {
+                    if (carModelNames[i].Equals(name))
+                    {
+                        return carModels[i];
+                    }
+                }
+                Debug.LogError("Using an invalid car name");
+                return null;
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
+using Replays;
 
 public class MainMenuNavigation : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class MainMenuNavigation : MonoBehaviour
     private GameObject mainLastButton, trackLastButton, settingsLastSelection, gamesettingsLastSelection, onlineLastSelection;
 
     public CarSelect carSelect;
+    public ReplayUI replayUI;
 
     public GameObject SettingsScreen;
     public GameObject GameSettingsScreen;
@@ -23,6 +25,7 @@ public class MainMenuNavigation : MonoBehaviour
         GAMESETTINGS,
         CARSELECT,
         TRACKSELECT,
+        REPLAYSELECT,
         ONLINE,
         ONLINELOBBY
     }
@@ -109,6 +112,9 @@ public class MainMenuNavigation : MonoBehaviour
                 case GameSettings.GameMode.REPLAY:
                     EventSystem.current.SetSelectedGameObject(mainRButton);
                     break;
+                default:
+                    EventSystem.current.SetSelectedGameObject(mainVSButton);
+                    break;
             }
         }
         
@@ -175,6 +181,36 @@ public class MainMenuNavigation : MonoBehaviour
         currentMenu = CurrentMenu.ONLINE;
     }
 
+    public void OpenReplays()
+    {
+        if (ReplayStorage.allReplays.Count == 0)
+            ReplayStorage.LoadAllReplays();
+
+        //clear selected object
+        EventSystem.current.SetSelectedGameObject(null);
+        replayUI.SelectFirstItem();
+
+        currentMenu = CurrentMenu.REPLAYSELECT;
+    }
+
+    public void SelectTrack(string scene)
+    {
+        ReplayStorage.selectedTrack = scene;
+
+        if (GameSettings.gamemode == GameSettings.GameMode.REPLAY)
+        {
+            ScreenManager.current.AnimateScreenOut(trackFirstButton.transform.parent.gameObject);
+
+            ScreenManager.current.AnimateScreenIn(transform.Find("Replay Select").gameObject);
+
+            OpenReplays();
+        } 
+        else
+        {
+            ScreenManager.current.GoToScene(scene);
+        }
+    }
+
     public void GoBackScreen()
     {
         if (currentMenu == CurrentMenu.CARSELECT)
@@ -202,8 +238,22 @@ public class MainMenuNavigation : MonoBehaviour
         {
             ScreenManager.current.AnimateScreenOut(trackFirstButton.transform.parent.gameObject);
 
-            ScreenManager.current.AnimateScreenIn(carSelect.gameObject);
-            OpenCarSelect();
+            if (GameSettings.gamemode == GameSettings.GameMode.REPLAY)
+            {
+                ScreenManager.current.AnimateScreenIn(mainTTButton.transform.parent.gameObject);
+                OpenMainMenu();
+            }
+            else
+            {
+                ScreenManager.current.AnimateScreenIn(carSelect.gameObject);
+                OpenCarSelect();
+            }
+        } else if (currentMenu == CurrentMenu.REPLAYSELECT)
+        {
+            ScreenManager.current.AnimateScreenOut(transform.Find("Replay Select").gameObject); 
+
+            ScreenManager.current.AnimateScreenIn(trackFirstButton.transform.parent.gameObject);
+            OpenTrackSelect();
         }
     }
 

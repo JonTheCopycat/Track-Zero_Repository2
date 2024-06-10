@@ -15,6 +15,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "G_Pitch",
+                    "type": "Button",
+                    "id": "4b2263d2-dc60-4b37-bcad-a24d05594907",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "G_Accelerate",
                     "type": "Button",
                     "id": "192ba44a-bf11-4a55-bb09-5698a32de1d7",
@@ -84,7 +93,7 @@
                 {
                     "name": "",
                     "id": "44696f26-d615-4bda-a16a-075dbb623ec8",
-                    "path": "<Gamepad>/leftShoulder",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad;Joystick",
@@ -168,6 +177,39 @@
                     "action": "G_Brake",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "Gamepad",
+                    "id": "a908322e-ace3-47d0-ad99-a003b7f0b0c2",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "Normalize(min=-1,max=1)",
+                    "groups": "",
+                    "action": "G_Pitch",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "864412b2-af11-4287-bcb8-c62c9c09572b",
+                    "path": "<Gamepad>/leftStick/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "G_Pitch",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "9f254732-121e-48c5-83ce-83a0f8b5cdec",
+                    "path": "<Gamepad>/leftStick/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "G_Pitch",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },
@@ -179,6 +221,15 @@
                     "name": "K_Steer",
                     "type": "Button",
                     "id": "059ab582-7154-45c6-985c-21a9f81a11b1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "K_Pitch",
+                    "type": "Button",
+                    "id": "fc1bd901-8ee8-4c7f-bde8-b2a7a1f8830b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -243,7 +294,7 @@
                 {
                     "name": "",
                     "id": "972b9fc6-717b-4db5-94f9-8afedb308278",
-                    "path": "<Keyboard>/upArrow",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -338,6 +389,39 @@
                     "action": "K_Brake",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "Keyboard",
+                    "id": "b10c085a-8c94-4251-8f9e-f06215271027",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "K_Pitch",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "b262acbb-af0d-4827-abce-933efd55a550",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "K_Pitch",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "406ecbbb-8698-4d01-a5cd-e3ba2f37a92f",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "K_Pitch",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },
