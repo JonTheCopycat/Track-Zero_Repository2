@@ -448,7 +448,7 @@ namespace AI
                                 Mathf.Deg2Rad * 2.5f, 0);
                         }
 
-                        testPosition = MoveDistanceAlongPath(testPosition, aiPath.GetPointById(line.Item1), 2 + 32 * rb.velocity.magnitude / 300, out line);
+                        testPosition = MoveDistanceAlongPath(testPosition, aiPath.GetPointById(line.Item1), 2 + 26 * rb.velocity.magnitude / 300, out line);
                         linePoints = (aiPath.GetPointById(line.Item1), aiPath.GetPointById(line.Item2));
 
                         plane1 = new Plane(linePoints.Item1.GetDir(), linePoints.Item1.GetPos());

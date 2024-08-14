@@ -140,7 +140,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1362724291864888559, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4298044805029167471, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
       propertyPath: TrailModule.dieWithParticles
@@ -232,7 +232,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4536841450097790861, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6033870919658664265, guid: cef6ab3850268634c9658d31d03e0213, type: 3}
       propertyPath: carId
@@ -1568,7 +1568,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2824231154586466918, guid: bd4c64357cbe5c243adbfebde9ec8a7a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -24.000015
+      value: -24
       objectReference: {fileID: 0}
     - target: {fileID: 6452890912148572691, guid: bd4c64357cbe5c243adbfebde9ec8a7a, type: 3}
       propertyPath: m_Pivot.x
@@ -1696,7 +1696,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6684135938433840212, guid: bd4c64357cbe5c243adbfebde9ec8a7a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 86.97258
+      value: 86.821
       objectReference: {fileID: 0}
     - target: {fileID: 6824078737726004311, guid: bd4c64357cbe5c243adbfebde9ec8a7a, type: 3}
       propertyPath: m_Size.x

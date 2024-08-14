@@ -73,28 +73,28 @@ namespace Cars
         new Car(
             "drift",
             310,    //maxSpeed
-            2.24f, //used to be 1.54f  
+            1.94f, //used to be 1.54f  
             2.54f,
             102f,   //acceleration
             120f,  //brakes
             32f,   //boostStrength 
             51f,   //driftAcceleration
             0.24f,   //traction
-            0.4f,   //oversteer
+            0.32f,   //oversteer
             2,  //tier
             "drift"),
 
         //5: tier 2
         new Car(
             "tuner",
-            288,
-            2.4f, //1.62f   
+            285,
+            2.15f, //1.62f   
             2.6f,
-            93f, //acceleration
-            64f,   //booststrength 
+            90f, //acceleration
+            62f,   //booststrength 
             50f,    //driftAcceleration
             0.7f,   //traction
-            0.23f,   //oversteer
+            0.21f,   //oversteer
             2, //tier
             "f2",
             new Color(91, 13, 186) / 255),
@@ -118,13 +118,13 @@ namespace Cars
         new Car(
             "muscle",
             330,
-            1.5f,  //0.97
+            1.05f,  //0.97
             1.7f,
             142f,
             20f,
             44f,
             0.3f,
-            0.45f,   //oversteer
+            0.38f,   //oversteer
             2, //tier
             "muscle",
             new Color(0.1f, 0.5f, 0.8f)),
@@ -147,14 +147,14 @@ namespace Cars
         new Car(
             "grip",
             332,
-            2.1f,
+            2.6f,
             1.14f,
-            132f,   //acceleration
+            139f,   //acceleration
             165f,  //brakes
-            37f,    //boostStrength
+            41f,    //boostStrength
             10f,     //driftAcceleration
             1f,     //traction
-            -0.2f,   //oversteer
+            -0.18f,   //oversteer
             2, //tier
             "grip"),
 
@@ -162,10 +162,10 @@ namespace Cars
         new Car(
             "trueno8600x",
             281,
-            2.72f,     //1.58f
+            2.52f,     //1.58f
             2.96f,
             130f,    //acceleration
-            68f,    //boostStrength
+            58f,    //boostStrength
             42f,    //driftAcceleration
             0.33f,  //traction
             0.25f,   //oversteer
@@ -177,12 +177,12 @@ namespace Cars
         new Car(
             "exotic",
             314,
-            1.7f,
+            1.95f,
             1.5f,
             250f,    //acceleration
             170,    //brakes
-            33f,    //boostStrength
-            25f,    //driftAcceleration
+            37f,    //boostStrength
+            28f,    //driftAcceleration
             0.55f,  //traction
             -0.1f,   //oversteer
             2, //tier 
@@ -224,7 +224,7 @@ namespace Cars
         new Car(
             "hover car",
             276f,
-            2.3f,     //1.3f
+            1.3f,     //1.3f
             2.65f,
             108f,    //acceleration
             100f,    //brakes
@@ -285,13 +285,13 @@ namespace Cars
         new Car(
             "understeer",
             345,    //maxSpeed
-            1.98f,
+            2.28f,
             1.55f,
             218,    //acceleration
             68,     //boostStrength
             42,     //driftAcceleration
             0.62f, //traction
-            -0.3f,   //oversteer
+            -0.07f,   //oversteer
             3, //tier
             "smooth",
             new Color(0.2f, 0.0f, 0.4f)),

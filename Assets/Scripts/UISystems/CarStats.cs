@@ -43,7 +43,7 @@ namespace UISystems
             displayAcc = Mathf.Clamp(acc / 250, -0.2f, 1.2f);
             displayDriftAcc = Mathf.Clamp(driftAcc / 80, -0.2f, 1.2f);
             displayHandling = Mathf.Clamp(handling / 3.5f, -0.2f, 1.2f);
-            displayStability = Mathf.Clamp(1 - (oversteer + 0.5f), -0.2f, 1.2f);
+            displayStability = Mathf.Clamp(oversteer + 0.5f, -0.2f, 1.2f);
             displayBoost = Mathf.Clamp(boost / 100f, -0.2f, 1.2f);
             displayTraction = Mathf.Clamp(traction, -0.2f, 1.2f);
         }

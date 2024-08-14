@@ -129,7 +129,7 @@ namespace Replays
             {
                 result = Directory.GetFiles(dir, $"*{fileName}");
 
-                Replay tempReplay = new Replay();
+                Replay tempReplay;
 
                 foreach (string file in result)
                 {

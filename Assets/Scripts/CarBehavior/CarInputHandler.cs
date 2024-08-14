@@ -42,9 +42,9 @@ namespace CarBehaviour
 
         public InputType inputType;
 
-        float acceleration, brakes, ebrake, steering, pitch, rawSteering;
+        float acceleration, brakes, ebrake, turbo, steering, pitch, rawSteering;
         bool boost, respawn, start;
-        bool isEbrake, isBoost, isRespawnPressed, isStart;
+        bool isEbrake, isTurbo, isBoost, isRespawnPressed, isStart;
 
         //ai only
         Car car;
@@ -79,10 +79,16 @@ namespace CarBehaviour
         {
             return steering;
         }
-        public float GetPitch()
+        public float GetTurbo()
         {
-            return pitch;
+            return turbo;
         }
+
+        public bool GetTurboDown()
+        {
+            return turbo != 0 && !isTurbo;
+        }
+
         public float GetEBrakes()
         {
             return ebrake;
@@ -132,13 +138,13 @@ namespace CarBehaviour
         {
             steering = s;
         }
-        public void SetPitch(float p)
-        {
-            pitch = p;
-        }
         public void SetEBrakes(float e)
         {
             ebrake = e;
+        }
+        public void SetTurbo(float s)
+        {
+            turbo = s;
         }
 
         public void SetBoost(bool b)
@@ -270,33 +276,6 @@ namespace CarBehaviour
                     else
                         steering = 0;
 
-                    if (Mathf.Abs(controls.Gamepad.G_Pitch.ReadValue<float>()) > GetDeadzone() ||
-                        Mathf.Abs(controls.Keyboard.K_Pitch.ReadValue<float>()) > GetDeadzone())
-                    {
-                        //Debug.Log("Steering");
-                        if (Mathf.Abs(controls.Gamepad.G_Pitch.ReadValue<float>()) > Mathf.Abs(controls.Keyboard.K_Pitch.ReadValue<float>()))
-                        {
-                            if (controls.Gamepad.G_Pitch.ReadValue<float>() > GetDeadzone())
-                                pitch = (controls.Gamepad.G_Pitch.ReadValue<float>() - GetDeadzone()) / (1 - GetDeadzone());
-                            else if (controls.Gamepad.G_Pitch.ReadValue<float>() < -GetDeadzone())
-                                pitch = (controls.Gamepad.G_Pitch.ReadValue<float>() + GetDeadzone()) / (1 - GetDeadzone());
-                        }
-                        else
-                        {
-                            float targetSteering = 0;
-                            if (controls.Keyboard.K_Pitch.ReadValue<float>() > GetDeadzone())
-                                targetSteering = (controls.Keyboard.K_Pitch.ReadValue<float>() - GetDeadzone()) / (1 - GetDeadzone());
-                            else if (controls.Keyboard.K_Pitch.ReadValue<float>() < -GetDeadzone())
-                                targetSteering = (controls.Keyboard.K_Pitch.ReadValue<float>() + GetDeadzone()) / (1 - GetDeadzone());
-
-                            if (Mathf.Abs(targetSteering) > Mathf.Abs(steering) && steering * targetSteering > 0)
-                                pitch = Mathf.MoveTowards(steering, targetSteering, 4f * Time.deltaTime);
-                            else
-                                pitch = targetSteering;
-                        }
-                    }
-                    else
-                        pitch = 0;
 
                     //acceleration
                     if (controls.Gamepad.G_Accelerate.ReadValue<float>() > GetDeadzone() ||
@@ -322,7 +301,6 @@ namespace CarBehaviour
                         {
                             brakes = gamepadBrakes;
                         }
-
                         else
                             brakes = keyboardBrakes;
                     }
@@ -340,12 +318,26 @@ namespace CarBehaviour
                         {
                             ebrake = gamepadBrakes;
                         }
-
                         else
                             ebrake = keyboardBrakes;
                     }
                     else
                         ebrake = 0;
+
+                    //turbo
+                    if (controls.Gamepad.G_Turbo.ReadValue<float>() > GetDeadzone() ||
+                        controls.Keyboard.K_Turbo.ReadValue<float>() > GetDeadzone())
+                    {
+                        if (turbo != 0)
+                            isTurbo = true;
+                        else
+                            turbo = 1;
+                    }
+                    else
+                    {
+                        turbo = 0;
+                        isTurbo = false;
+                    }
 
                     //boost
                     if (controls.Gamepad.G_Boost.ReadValue<float>() > GetDeadzone() ||
@@ -382,8 +374,8 @@ namespace CarBehaviour
                     {
                         if (start)
                             isStart = true;
-                        else
-                            start = true;
+                        
+                        start = true;
                     }
                     else
                     {
@@ -757,13 +749,11 @@ namespace CarBehaviour
                                     {
                                         ebrake = 1;
                                         brakes = 1f;
-                                        acceleration = 0;
                                         incomingTurn = true;
                                     }
                                     else if (Mathf.Abs(trackCurveAngle2) * speedScale / car.GetHandling() > 6.5f)
                                     {
                                         ebrake = 1f;
-                                        brakes = 1f;
                                         incomingTurn = true;
                                     }
                                     //if there's a turn coming and is tight enough, brake
@@ -841,7 +831,7 @@ namespace CarBehaviour
                             }
                             if (incomingTurn)
                             {
-                                rawSteering = rawSteering * 0.75f + trackCurveAngle2 / (car.GetHandling()) * speedScale * 0.4f;
+                                rawSteering = rawSteering * 0.75f + trackCurveAngle2 / (car.GetHandling()) * speedScale * 0.25f;
                             }
                         }
                         else

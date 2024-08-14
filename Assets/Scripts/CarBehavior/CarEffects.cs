@@ -132,7 +132,7 @@ namespace CarBehaviour
                 }
                 else if (carControl.isDrivingOnTurbo())
                 {
-                    ChangeTiresToColor(new Color(1, 0, 1) * 5);
+                    ChangeTiresToColor(new Color(0.9f, 0.5f, 1f) * 5);
                 }
                 else
                 {
@@ -161,7 +161,7 @@ namespace CarBehaviour
                     }
 
                 }
-                else if (carControl.isDrifting() || carControl.isSliding() || carControl.isBraking())
+                else if (carControl.isDrifting() || carControl.isSliding() || carControl.isBraking() || carControl.isOnTurbo())
                 {
                     Color temp;
                     if (carControl.isDrifting())
@@ -178,8 +178,12 @@ namespace CarBehaviour
 
 
                     //ChangeLightsToColor(Color.green * 10, true);
-                    //this is basically a 3d lerp, shifting between the three colors of drifting, sliding, and braking
-                    ChangeLightsToColor(Color.Lerp(Color.Lerp(temp, new Color(0, 0, 1), inputHandler.GetEBrakes()), new Color(1, 0, 0), inputHandler.GetBrakes()), true);
+                    //this is basically a 4d lerp, shifting between the four colors of drifting, sliding, braking, and turbo
+                    
+                    Color brakeLerp = Color.Lerp(temp, new Color(1, 0, 0), inputHandler.GetBrakes());
+                    Color turboLerp = Color.Lerp(brakeLerp, new Color(0, 0, 1), inputHandler.GetTurboDown() ? 1 : 0);
+                    Color driftLerp = Color.Lerp(turboLerp, new Color(0.8f, 0.8f, 0.8f), inputHandler.GetEBrakes() * 0.66f);
+                    ChangeLightsToColor(driftLerp, true); 
 
 
                     if (carControl.GetDriftAngle() > 90)

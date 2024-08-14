@@ -8743,7 +8743,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706868, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Name
-      value: KeyAcc
+      value: KeyTurbo
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706869, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Pivot.x
@@ -8843,19 +8843,19 @@ PrefabInstance:
       objectReference: {fileID: 1190532880}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Id
-      value: 972b9fc6-717b-4db5-94f9-8afedb308278
+      value: cd3a6cac-64a8-4e2b-942d-9924927b38b5
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Path
-      value: <Keyboard>/space
+      value: <Keyboard>/d
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputActionReference
       value: 
-      objectReference: {fileID: 6585722135219162646, guid: 62b6efb4ddb10c14d81106427d4de6a4, type: 3}
+      objectReference: {fileID: -8364694006843996378, guid: 62b6efb4ddb10c14d81106427d4de6a4, type: 3}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Action
-      value: K_Accelerate
+      value: K_Speed
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706875, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -16064,7 +16064,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.6872353, b: 0.9529412, a: 1}
+  m_Color: {r: 0.8784314, g: 0.8784314, b: 0.8784314, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -21716,7 +21716,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706868, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Name
-      value: GamepadPitch
+      value: GamepadAcc
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706869, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Pivot.x
@@ -21816,35 +21816,35 @@ PrefabInstance:
       objectReference: {fileID: 1190532880}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Id
-      value: a908322e-ace3-47d0-ad99-a003b7f0b0c2
+      value: 6a4e9e37-468a-449d-9a41-ac30d88d39f1
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Name
-      value: Gamepad
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Path
-      value: 1DAxis
+      value: <Gamepad>/rightTrigger
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputActionReference
       value: 
-      objectReference: {fileID: 6619082492438390778, guid: 62b6efb4ddb10c14d81106427d4de6a4, type: 3}
+      objectReference: {fileID: 6449908234448579351, guid: 62b6efb4ddb10c14d81106427d4de6a4, type: 3}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Flags
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Action
-      value: G_Pitch
+      value: G_Accelerate
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Groups
-      value: 
+      value: Gamepad;Joystick
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Processors
-      value: Normalize(min=-1,max=1)
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706875, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Interactable
@@ -24007,7 +24007,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Stabl
+  m_Text: Drift
 --- !u!222 &1618944669
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -28498,7 +28498,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706868, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Name
-      value: KeyPitch
+      value: KeyAcc
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706869, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Pivot.x
@@ -28602,31 +28602,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Id
-      value: b10c085a-8c94-4251-8f9e-f06215271027
+      value: 6a4e9e37-468a-449d-9a41-ac30d88d39f1
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Name
-      value: Keyboard
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Path
-      value: 1DAxis
+      value: <Gamepad>/rightTrigger
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputActionReference
       value: 
-      objectReference: {fileID: -2360120508769806307, guid: 62b6efb4ddb10c14d81106427d4de6a4, type: 3}
+      objectReference: {fileID: 6449908234448579351, guid: 62b6efb4ddb10c14d81106427d4de6a4, type: 3}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Flags
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Action
-      value: K_Pitch
+      value: G_Accelerate
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Groups
-      value: 
+      value: Gamepad;Joystick
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706875, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -29688,7 +29688,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706868, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Name
-      value: GamepadAcc
+      value: GamepadTurbo
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706869, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Pivot.x
@@ -29788,19 +29788,19 @@ PrefabInstance:
       objectReference: {fileID: 1190532880}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Id
-      value: 6a4e9e37-468a-449d-9a41-ac30d88d39f1
+      value: 3f9ae9d0-5dbb-4537-a101-001e4370208d
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Path
-      value: <Gamepad>/rightTrigger
+      value: <Gamepad>/leftShoulder
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputActionReference
       value: 
-      objectReference: {fileID: 6449908234448579351, guid: 62b6efb4ddb10c14d81106427d4de6a4, type: 3}
+      objectReference: {fileID: -6453644298067877237, guid: 62b6efb4ddb10c14d81106427d4de6a4, type: 3}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Action
-      value: G_Accelerate
+      value: G_Speed
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Groups
@@ -30027,7 +30027,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.62671614, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.105882354, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
