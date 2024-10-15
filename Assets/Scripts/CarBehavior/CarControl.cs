@@ -34,8 +34,8 @@ namespace CarBehaviour
         public float oversteer;
 
         //miscellaneous
-        public static readonly float slightDriftAngle = 1f;
-        public static readonly float fullDriftAngle = 2.5f;
+        public static readonly float slightDriftAngle = 1.5f;
+        public static readonly float fullDriftAngle = 3f;
         static readonly bool maxSpeedUsed = true;
         public static bool normalGravity = false;
         private static int carsInARow;
@@ -375,8 +375,8 @@ namespace CarBehaviour
             if (started)
             {
                 //change handling, publicaly (so that other scripts that rely on this can use it without problem)
-                handling = 0.5f + car.GetHandling() * 0.66f  * speedFactor;
-                dHandling = 0.5f + car.GetDHandling() * 0.66f * speedFactor;
+                handling = 0.25f + car.GetHandling() * 1f * speedFactor;
+                dHandling = 0.25f + car.GetDHandling() * 1f * speedFactor;
 
                 CustomUpdate();
             }
@@ -1182,7 +1182,7 @@ namespace CarBehaviour
             {
                 if (Vector3.Angle(velocity.normalized, (rb.rotation * Vector3.forward).normalized) < 30f)
                 {
-                    float brakingStrength = car.GetBrakes() * 0.75f;
+                    float brakingStrength = car.GetBrakes();
                     rb.velocity += rb.velocity.normalized * -brakingStrength * speedFactor * inputHandler.GetBrakes() * Time.deltaTime;
                 }
                 else
@@ -1192,7 +1192,7 @@ namespace CarBehaviour
             }
             if (isSliding())
             {
-                float brakingStrength = car.GetBrakes() * 0.5f;
+                float brakingStrength = car.GetBrakes() * 0.66f;
                 rb.velocity += rb.velocity.normalized * -brakingStrength * speedFactor * inputHandler.GetEBrakes() * Time.deltaTime;
             }
         }
@@ -1258,7 +1258,7 @@ namespace CarBehaviour
 
             if (isDrifting())
             {
-                currentHandling = (isSliding() ? handling * 0.25f + 2.2f : handling) + oversteer + 0.2f * rb.velocity.magnitude / (350 * speedFactor);
+                currentHandling = handling * 1.5f + (isSliding() ? 0.5f : 0) + oversteer + 0.2f * rb.velocity.magnitude / (350 * speedFactor);
 
             }
             if (isBraking())
@@ -1345,18 +1345,19 @@ namespace CarBehaviour
 
                 if (isSliding())
                 {
-                    minimumResponsiveness = 8f;
-                    exponential = 7f * responceModifier * (targetVelocity - handlingVel);
+                    minimumResponsiveness = 2f;
+                    exponential = 4f * responceModifier * (targetVelocity - handlingVel);
                 }
-                else if ((Mathf.Abs(targetVelocity) > Mathf.Abs(handlingVel) && handlingVel * targetVelocity > 0) || Mathf.Abs(handlingVel) < 0.01f)
+                else if (isDrifting())
                 {
-                    minimumResponsiveness = 6f;
-                    exponential = 7f * responceModifier * (targetVelocity - handlingVel);
+                    minimumResponsiveness = 3f;
+                    exponential = 4f * responceModifier * (targetVelocity - handlingVel);
                 }
                 else
                 {
-                    minimumResponsiveness = 7f;
-                    exponential = 7f * responceModifier * (targetVelocity - handlingVel);
+                    //(Mathf.Abs(targetVelocity) > Mathf.Abs(handlingVel) && handlingVel * targetVelocity > 0) || Mathf.Abs(handlingVel) < 0.01f
+                    minimumResponsiveness = 6f;
+                    exponential = 4f * responceModifier * (targetVelocity - handlingVel);
                 }
                 float linear = minimumResponsiveness * responceModifier * (targetVelocity - handlingVel) / Mathf.Abs(targetVelocity - handlingVel);
 
@@ -1686,19 +1687,21 @@ namespace CarBehaviour
             sideProjection = Vector3.Project(rb.velocity, rb.rotation * Vector3.right);
             frontProjection = Vector3.Project(rb.velocity, rb.rotation * Vector3.forward);
             driftAngle = Vector3.Angle(Vector3.ProjectOnPlane(rb.velocity, rb.rotation * Vector3.up), rb.rotation * Vector3.forward);
+            float rawFriction = Mathf.Max(currentTraction, 0.001f) * tractionModifier * terrainModifier * 60 + downforce;
 
             //drift conditions by angle (for 2.4 - current)
-            if ((status & C_DRIFTING) == 0 && driftAngle > fullDriftAngle)
+            float deltaAngle = Mathf.Atan2(Mathf.Clamp(rawFriction, 0, sideProjection.magnitude), frontProjection.magnitude);
+            if ((status & C_DRIFTING) == 0 && (driftAngle > fullDriftAngle || (Mathf.Abs(handlingVel) - deltaAngle) * Mathf.Rad2Deg > fullDriftAngle))
             {
                 status |= C_DRIFTING;
             }
 
-            else if ((status & C_DRIFTING) != 0 && driftAngle < slightDriftAngle && Mathf.Abs(handlingVel) < handling)
+            else if ((status & C_DRIFTING) != 0 && driftAngle < slightDriftAngle && (Mathf.Abs(handlingVel) - deltaAngle) * Mathf.Rad2Deg <= fullDriftAngle)
             {
                 status &= (short)~C_DRIFTING;
             }
 
-            float newTraction = Mathf.LerpUnclamped(0.03f, 0.08f, traction) * speedFactor + (isDrifting() ? 0.04f * Mathf.Clamp01(driftAngle / 75) : 0.03f);
+            float newTraction = Mathf.LerpUnclamped(0.02f, 0.07f, traction) * speedFactor + (isDrifting() ? 0 : 0.02f);
 
             if (!isGrounded())
             {
@@ -1722,9 +1725,10 @@ namespace CarBehaviour
                 //rb.velocity -= Vector3.ClampMagnitude(sideProjection,
                 //Mathf.Clamp(currentTraction * terrainModifier * 60 + downforce, 0.01f, float.MaxValue)) * 60 * Time.deltaTime;
 
-                float rawFriction = Mathf.Max(currentTraction, 0.001f) * tractionModifier * terrainModifier * 60 + downforce;
+                
 
                 rb.velocity -= sideProjection.normalized * Mathf.Clamp(rawFriction, 0, sideProjection.magnitude) * 60 * deltaTime;
+
 
                 if (isDrifting())
                 {
@@ -1753,7 +1757,7 @@ namespace CarBehaviour
                     //Mathf.Clamp01(driftAngle / (fullDriftAngle * 2))
 
                     //true match + capped (2.9)
-                    float standInSpeed = 50f;
+                    float standInSpeed = Mathf.Min(100f, rb.velocity.magnitude * 0.5f);
                     float trueMatch = 0;
                     float discriminant;
                     if (frontProjection.magnitude > standInSpeed)
@@ -1774,16 +1778,10 @@ namespace CarBehaviour
                     //    )
                     //    * inputHandler.GetAcceleration() * deltaTime;
 
-                    //rb.velocity += rb.rotation * Vector3.forward * trueMatch * Mathf.Lerp(0.5f, 1, 1 - Mathf.Pow((driftAngle - 20) / 70, 2)) * 60 * inputHandler.GetAcceleration() * deltaTime;
+                    rb.velocity += rb.rotation * Vector3.forward * (trueMatch * 0.85f * 60 + driftAcceleration) * Mathf.Clamp01(driftAngle / (fullDriftAngle * 2)) * inputHandler.GetAcceleration() * deltaTime;
 
-                    if (isBoosting())
-                    {
-                        rb.velocity += rb.rotation * Vector3.forward * (trueMatch * 0.85f * 60 + driftAcceleration) * Mathf.Clamp01(driftAngle / (fullDriftAngle * 2)) * inputHandler.GetAcceleration() * deltaTime;
-                    }
-                    else
-                    {
-                        rb.velocity += rb.rotation * Vector3.forward * (trueMatch * 0.85f * 60) * Mathf.Clamp01(driftAngle / (fullDriftAngle * 2)) * inputHandler.GetAcceleration() * deltaTime;
-                    }
+                    //what if no perfect speed conservation? constant accel version
+                    //rb.velocity += rb.rotation * Vector3.forward * (driftAcceleration * 2) * Mathf.Clamp01(driftAngle / 30) * inputHandler.GetAcceleration() * deltaTime;
 
                     if ((status & C_GROUNDED) != 0)
                     {

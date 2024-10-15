@@ -8860,7 +8860,7 @@ PrefabInstance:
     - target: {fileID: 472876291288706875, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 675804633}
+      objectReference: {fileID: 903213482}
     - target: {fileID: 472876291288706875, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
@@ -9983,7 +9983,7 @@ PrefabInstance:
     - target: {fileID: 472876291288706875, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 2100569155}
+      objectReference: {fileID: 1323692574}
     - target: {fileID: 4528904118850180962, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Text
       value: G_Steer
@@ -13112,6 +13112,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 892444342}
   m_CullTransparentMesh: 0
+--- !u!114 &903213482 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 472876291288706875, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
+  m_PrefabInstance: {fileID: 1990770371}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &905614710
 GameObject:
   m_ObjectHideFlags: 0
@@ -19776,6 +19787,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1323129132}
   m_CullTransparentMesh: 1
+--- !u!114 &1323692574 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 472876291288706875, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
+  m_PrefabInstance: {fileID: 1478128565}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1325131267
 GameObject:
   m_ObjectHideFlags: 0
@@ -21853,7 +21875,7 @@ PrefabInstance:
     - target: {fileID: 472876291288706875, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1255640181}
+      objectReference: {fileID: 708343118}
     - target: {fileID: 472876291288706875, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
@@ -28602,7 +28624,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Id
-      value: 6a4e9e37-468a-449d-9a41-ac30d88d39f1
+      value: 972b9fc6-717b-4db5-94f9-8afedb308278
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Name
@@ -28610,28 +28632,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Path
-      value: <Gamepad>/rightTrigger
+      value: <Keyboard>/upArrow
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputActionReference
       value: 
-      objectReference: {fileID: 6449908234448579351, guid: 62b6efb4ddb10c14d81106427d4de6a4, type: 3}
+      objectReference: {fileID: 6585722135219162646, guid: 62b6efb4ddb10c14d81106427d4de6a4, type: 3}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Flags
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Action
-      value: G_Accelerate
+      value: K_Accelerate
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706874, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: inputBinding.m_Groups
-      value: Gamepad;Joystick
+      value: Keyboard&Mouse
       objectReference: {fileID: 0}
     - target: {fileID: 472876291288706875, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1255640181}
+      objectReference: {fileID: 675804633}
     - target: {fileID: 472876291288706875, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
@@ -29809,7 +29831,7 @@ PrefabInstance:
     - target: {fileID: 472876291288706875, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 708343118}
+      objectReference: {fileID: 1323692574}
     - target: {fileID: 472876291288706875, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
@@ -30277,7 +30299,7 @@ PrefabInstance:
     - target: {fileID: 472876291288706875, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 2017686877}
+      objectReference: {fileID: 903213482}
     - target: {fileID: 4528904118850180962, guid: f1d933434ea4c6d47aaebaacaf44de7e, type: 3}
       propertyPath: m_Text
       value: K_Steer
