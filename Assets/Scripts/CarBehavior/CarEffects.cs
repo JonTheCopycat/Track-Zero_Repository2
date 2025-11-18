@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Cars;
+using Mono.Cecil.Cil;
 
 namespace CarBehaviour
 {
@@ -140,9 +141,17 @@ namespace CarBehaviour
                 }
 
                 //wheel trail color
-                if (carControl.isBoosting())
+                if (carControl.isBoosting() || carControl.isBoostDrifting())
                 {
-                    ChangeLightsToColor(new Color(1f, 0.8f, 0.3f), true);
+                    if (carControl.isBoosting())
+                    {
+                        ChangeLightsToColor(new Color(1f, 0.8f, 0.3f), true);
+                    }
+                    else
+                    {
+                        ChangeLightsToColor(new Color(1f, 0.8f, 0.3f) * 0.8f, true);
+                    }
+
                     ChangeBoosterSize(1.5f);
 
                     otherSource.clip = soundProfile.boostOn;

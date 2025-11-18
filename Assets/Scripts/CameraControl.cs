@@ -103,7 +103,7 @@ public class CameraControl : MonoBehaviour
                 lastRotation.Peek() * Vector3.forward * Mathf.Cos(Mathf.Deg2Rad * (cameraAngle - (targetRotationSpeed * 0.2f))) +
                 lastRotation.Peek() * Vector3.down * Mathf.Sin(Mathf.Deg2Rad * cameraAngle) -
                 lastRotation.Peek() * Vector3.right * Mathf.Sin(Mathf.Deg2Rad * (targetRotationSpeed * 0.2f)),
-                    lastRotation.Peek() * new Vector3(0, 1, 0.5f)
+                    lastRotation.Peek() * new Vector3(0, 1, 0.2f)
                     );
             }
             else
@@ -112,7 +112,7 @@ public class CameraControl : MonoBehaviour
                 carDirection = Quaternion.LookRotation(
                 lastRotation.Peek() * -Vector3.forward * Mathf.Cos(Mathf.Deg2Rad * cameraAngle) +
                 lastRotation.Peek() * Vector3.down * Mathf.Sin(Mathf.Deg2Rad * cameraAngle),
-                    lastRotation.Peek() * new Vector3(0, 1, 0.5f)
+                    lastRotation.Peek() * new Vector3(0, 1, 0.2f)
                     );
             }
 
@@ -151,11 +151,11 @@ public class CameraControl : MonoBehaviour
                 //    Mathf.Clamp(Vector3.Angle(rawRotDirection * Vector3.up, lastRotationDirection * Vector3.up) * Mathf.Deg2Rad - Mathf.PI * 0.25f * Time.deltaTime, 0, Mathf.PI * 0.125f), 0)
                 //    );
                 finalPosDirection = Quaternion.Lerp(lastPositionDirection, Quaternion.Lerp(speedDirection, carDirection, 0.2f),
-                    0.5f * 60 * Time.deltaTime);
-                finalRotDirection = Quaternion.Lerp(lastRotationDirection, Quaternion.Lerp(speedDirection, carDirection, 0.3f), 0.6f * 60 * Time.deltaTime);
+                    0.75f * 60 * Time.deltaTime);
+                finalRotDirection = Quaternion.Lerp(lastRotationDirection, Quaternion.Lerp(speedDirection, carDirection, 0.3f), 0.8f * 60 * Time.deltaTime);
 
-                //finalPosDirection = Quaternion.Lerp(speedDirection, carDirection, 0.15f);
-                //finalRotDirection = Quaternion.Lerp(speedDirection, carDirection, 0.2f);
+                //finalPosDirection = Quaternion.Lerp(speedDirection, carDirection, 0.2f);
+                //finalRotDirection = Quaternion.Lerp(speedDirection, carDirection, 0.3f);
             }
             else
             {
@@ -169,24 +169,25 @@ public class CameraControl : MonoBehaviour
             //extraOffset = /*Vector3.ProjectOnPlane(-deltaV * (1 - cameraStiffness) * 2f, target.transform.up) +*/ Vector3.ClampMagnitude(-target.velocity * 0.005f, 2.5f);
             //extraOffset = extraOffset.sqrMagnitude * 2 * extraOffset.normalized;
 
-            extraOffset = -deltaV * (1 - cameraStiffness) * 0.6f;
+            extraOffset = -deltaV * (1 - cameraStiffness) * 0.75f;
 
             Vector3 directionToUse = Vector3.Cross(transform.right, target.transform.up);
             Quaternion quaternionToUse = Quaternion.LookRotation(directionToUse, target.transform.up);
             //clamp the offset
             float clampedY;
             float clampedZ;
+            float clampedX;
 
             if (Physics.Raycast(
                 new Ray(transform.position + finalPosDirection * offset, target.transform.up), out cameraHit, 20f))
             {
                 clampedY = Mathf.Clamp((Quaternion.Inverse(quaternionToUse) * Vector3.Project(extraOffset, target.transform.up)).y,
-                        -offset.y * (1 + cameraAngle / 15), 2f);
+                        -offset.y * (1 + cameraAngle / 15), 4f);
             }
             else
             {
                 clampedY = Mathf.Clamp((Quaternion.Inverse(quaternionToUse) * Vector3.Project(extraOffset, target.transform.up)).y,
-                        -offset.y * (1 + cameraAngle / 15), 2f);
+                        -offset.y * (1 + cameraAngle / 15), 4f);
             }
 
             //if there is something in the path of the camera (forwards and backwards direction)
@@ -203,9 +204,24 @@ public class CameraControl : MonoBehaviour
                 clampedZ = Mathf.Clamp((Quaternion.Inverse(quaternionToUse) * Vector3.Project(extraOffset, directionToUse)).z,
                     -4f, 1.5f);
             }
+
+            //if there is something in the path of the camera (forwards and backwards direction)
+            if (Physics.Raycast(
+                new Ray(transform.position + finalPosDirection * offset + new Vector3(0, clampedY, clampedZ),
+                transform.rotation * Vector3.right * (Quaternion.Inverse(transform.rotation) * Vector3.Project(extraOffset, transform.rotation * Vector3.right)).x),
+                out cameraHit, 35f))
+            {
+                clampedX = Mathf.Clamp((Quaternion.Inverse(quaternionToUse) * Vector3.Project(extraOffset, target.transform.right)).x,
+                    -cameraHit.distance + 0.25f, 1f);
+            }
+            else
+            {
+                clampedX = Mathf.Clamp((Quaternion.Inverse(quaternionToUse) * Vector3.Project(extraOffset, target.transform.right)).x,
+                    -4f, 1f);
+            }
             postOffsetRotDirection = carDirection * Quaternion.Euler(new Vector3(clampedY * 0.5f * Mathf.Rad2Deg, 0, 0));
             //reconstruct the extraOffset
-            extraOffset = quaternionToUse * new Vector3(0, clampedY, clampedZ);
+            extraOffset = quaternionToUse * new Vector3(clampedX * 0.1f, clampedY, clampedZ);
 
             //hood cam special
             if (lockedCam)
@@ -224,16 +240,16 @@ public class CameraControl : MonoBehaviour
                 //    (Quaternion.Inverse(carDirection) * extraOffset).x * 0.25f * Mathf.Rad2Deg,
                 //    0));
 
-                postOffsetRotDirection = Quaternion.RotateTowards(speedDirection, Quaternion.LookRotation(
-                     -(finalPosDirection * offset + extraOffset) * Mathf.Cos(Mathf.Deg2Rad * 5) + target.transform.up * Mathf.Sin(Mathf.Deg2Rad * 15),
-                    Vector3.RotateTowards(lastRotationDirection * Vector3.up, target.transform.rotation * new Vector3(0, 1, 0.25f), Mathf.PI * 0.25f * Time.deltaTime, 0)),
-                    30);
+                //postOffsetRotDirection = Quaternion.RotateTowards(speedDirection, Quaternion.LookRotation(
+                //     -(finalPosDirection * offset + extraOffset) * Mathf.Cos(Mathf.Deg2Rad * 5) + target.transform.up * Mathf.Sin(Mathf.Deg2Rad * 15),
+                //    Vector3.RotateTowards(lastRotationDirection * Vector3.up, target.transform.rotation * new Vector3(0, 1, 0.25f), Mathf.PI * 0.25f * Time.deltaTime, 0)),
+                //    30);
 
-                //postOffsetRotDirection = SpecialLerp(lastRotationDirection, Quaternion.Lerp(postOffsetRotDirection, finalRotDirection, 0.5f), 0.05f + Mathf.Pow(100, 0.4f));
+                postOffsetRotDirection = SpecialLerp(lastRotationDirection, Quaternion.Lerp(postOffsetRotDirection, finalRotDirection, 0.7f), 0.05f + Mathf.Pow(100, 0.4f));
 
-                // postOffsetRotDirection = Quaternion.Lerp(postOffsetRotDirection, finalRotDirection, 0.5f);
+                //postOffsetRotDirection = Quaternion.Lerp(postOffsetRotDirection, finalRotDirection, 0.3f);
 
-                postOffsetRotDirection = finalRotDirection;
+                //postOffsetRotDirection = finalRotDirection;
             }
             else if (!lockedCam)
             {
@@ -274,20 +290,27 @@ public class CameraControl : MonoBehaviour
             //fov modifier
             if (mainCamera != null && carControl != null)
             {
-                float basePov = 85 + target.velocity.magnitude / 300 * 15;
+                float basePov = 85 + target.velocity.magnitude / 500 * 25;
                 if (carControl.isBoosting())
                 {
                     currentFov = Mathf.MoveTowards(currentFov, basePov + 5, (10 / 0.4f) * Time.deltaTime);
 
-                    boostOffset = -directionToUse.normalized * Mathf.MoveTowards(boostOffset.magnitude,
-                            carControl.isDoubleBoosting() ? 0.75f : 0.5f,
-                            4f * Time.deltaTime);
+                    boostOffset = -target.transform.forward * Mathf.Lerp(boostOffset.magnitude,
+                            1.5f,
+                            0.2f * 60f * Time.deltaTime);
+                }
+                else if (carControl.isBoostDrifting()) {
+                    currentFov = Mathf.MoveTowards(currentFov, basePov + 4, (10 / 0.4f) * Time.deltaTime);
+
+                    boostOffset = -target.transform.forward * Mathf.Lerp(boostOffset.magnitude,
+                            1f,
+                            0.2f * 60f * Time.deltaTime);
                 }
                 else
                 {
                     currentFov = Mathf.MoveTowards(currentFov, basePov, (10 / 0.4f) * Time.deltaTime);
 
-                    boostOffset = -directionToUse.normalized * Mathf.MoveTowards(boostOffset.magnitude, 0, 1f * Time.deltaTime);
+                    boostOffset = -target.transform.forward.normalized * Mathf.MoveTowards(boostOffset.magnitude, 0, 1f * Time.deltaTime);
                 }
 
                 mainCamera.fieldOfView = currentFov;
@@ -311,7 +334,7 @@ public class CameraControl : MonoBehaviour
             //transform.rotation = postOffsetRotDirection;
             //transform.rotation = finalDirection;
             transform.rotation = postOffsetRotDirection;
-            transform.position = target.transform.position + finalPosDirection * offset + extraOffset + boostOffset + shakeOffset + Vector3.ClampMagnitude(-velocity * 0.005f, 2f);
+            transform.position = target.transform.position + finalPosDirection * offset + extraOffset + boostOffset + shakeOffset + Vector3.ClampMagnitude(-velocity.normalized * Mathf.Sqrt(velocity.magnitude / (350 * CarControl.speedFactor)) * 2f, 3f);
 
             lastPositionDirection = finalPosDirection;
             lastRotationDirection = postOffsetRotDirection;

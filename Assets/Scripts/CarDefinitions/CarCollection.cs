@@ -12,244 +12,256 @@ namespace Cars
         {
         //0 (tier 1)
         new Car(
-            "starter1",
-            275,    //maxSpeed
-            1.75f,
-            1.77f,
+            name: "starter1",
+            maxSpeed: 275,    //maxSpeed
+            handling: 1.75f,
+            dHandling: 1.77f,
             acceleration:  106f,   //acceleration
             boostStrength: 30,   //boostStrength 
             driftAcceleration: 25f,   //driftAcceleration
             traction: 0.25f,   //traction
             oversteer: 0.0f,
             tier: 1, //tier
-            "f2",
-            new Color(33, 33, 40) / 255),
+            carBody: "f2",
+            color: new Color(33, 33, 40) / 255
+            ),
 
         //1 (tier 1)
         new Car(
-            "starter_drift",
-            266,    //maxSpeed
-            2.1f,
-            2.4f,
-            98,   //acceleration
-            18f,   //boostStrength 
-            45,   //driftAcceleration
-            0.15f,   //traction
-            0.2f,   //oversteer
-            1, //tier
-            "f2",
-            new Color(33, 33, 40) / 255),
+            name: "starter_drift",
+            maxSpeed: 266,    //maxSpeed
+            handling: 2.1f,
+            dHandling: 2.4f,
+            acceleration:  98,   //acceleration
+            boostStrength: 18f,   //boostStrength 
+            driftAcceleration: 45,   //driftAcceleration
+            traction: 0.15f,   //traction
+            oversteer: 0.2f,
+            tier: 1, //tier
+            carBody: "f2",
+            color: new Color(33, 33, 40) / 255
+            ),
 
         //2 (tier 1)
         new Car(
-            "starter_mustang",
-            296,    //maxSpeed
-            1.3f,
-            1.35f,
-            146,   //acceleration
-            27,   //boostStrength 
-            12,   //driftAcceleration
-            0.43f,   //traction
-            -0.1f, //oversteer
-            1, //tier
-            "f2",
-            new Color(33, 33, 40) / 255),
+            name: "starter_mustang",
+            maxSpeed: 296,    //maxSpeed
+            handling: 1.3f,
+            dHandling: 1.35f,
+            acceleration:  146,   //acceleration
+            boostStrength: 27,   //boostStrength 
+            driftAcceleration: 12,   //driftAcceleration
+            traction: 0.43f,   //traction
+            oversteer: 0.1f,
+            tier: 1, //tier
+            carBody: "f2",
+            color: new Color(33, 33, 40) / 255
+            ),
 
         //3 (tier 1)
         new Car(
-            "starter_boost",
-            262f,    //maxSpeed
-            1.7f,
-            1.8f,
-            102,   //acceleration
-            44,   //boostStrength 
-            22,   //driftAcceleration
-            0.19f,   //traction
-            0.1f,    //oversteer
-            1, //tier
-            "f2",
-            new Color(33, 33, 40) / 255),
+            name: "starter_boost",
+            maxSpeed: 262f,    //maxSpeed
+            handling: 1.7f,
+            dHandling: 1.8f,
+            acceleration:  102,   //acceleration
+            boostStrength: 44,   //boostStrength 
+            driftAcceleration: 22,   //driftAcceleration
+            traction: 0.19f,   //traction
+            oversteer: 0.1f,
+            tier: 1, //tier
+            carBody: "f2",
+            color:new Color(33, 33, 40) / 255
+            ),
 
         new Car(
-            "drift",
-            310,    //maxSpeed
-            1.94f, //used to be 1.54f  
-            2.54f,
-            102f,   //acceleration
-            120f,  //brakes
-            32f,   //boostStrength 
-            51f,   //driftAcceleration
-            0.24f,   //traction
-            0.32f,   //oversteer
-            2,  //tier
-            "drift"),
+            name: "drift",
+            maxSpeed: 310,    //maxSpeed
+            handling: 1.94f,
+            dHandling: 2.54f,
+            acceleration:  102f,   //acceleration
+            brakes: 120f,
+            boostStrength: 32f,   //boostStrength 
+            driftAcceleration: 51f,   //driftAcceleration
+            traction: 0.24f,   //traction
+            oversteer: 0.32f,
+            tier: 2, //tier
+            carBody: "drift"
+            ),
 
         //5: tier 2
         new Car(
-            "tuner",
-            285,
-            2.15f, //1.62f   
-            2.6f,
-            90f, //acceleration
-            62f,   //booststrength 
-            50f,    //driftAcceleration
-            0.7f,   //traction
-            0.21f,   //oversteer
-            2, //tier
-            "f2",
-            new Color(91, 13, 186) / 255),
+            name: "tuner",
+            maxSpeed: 285,    //maxSpeed
+            handling: 2.15f,
+            dHandling: 2.6f,
+            acceleration:  90f,   //acceleration
+            boostStrength: 62f,   //boostStrength 
+            driftAcceleration: 50f,   //driftAcceleration
+            traction: 0.7f,   //traction
+            oversteer: 0.21f,
+            tier: 2, //tier
+            carBody: "f2",
+            color: new Color(91, 13, 186) / 255),
         
         //6: tier 2
         new Car(
-            "balance",
-            300,
-            2.05f,
-            2.1f,
-            110f,
-            50f,
-            40f,
-            0.45f,
-            0.05f,   //oversteer
-            2, //tier 
-            "smooth",
-            new Color(153, 153, 153) / 255),
+            name: "balance",
+            maxSpeed: 300,    //maxSpeed
+            handling: 2.05f,
+            dHandling: 2.1f,
+            acceleration:  110f,   //acceleration
+            boostStrength: 50f,   //boostStrength 
+            driftAcceleration: 40f,   //driftAcceleration
+            traction: 0.45f,   //traction
+            oversteer: 0.05f,
+            tier: 2, //tier
+            carBody: "smooth",
+            color: new Color(153, 153, 153) / 255),
 
         //7: tier 2
         new Car(
-            "muscle",
-            330,
-            1.05f,  //0.97
-            1.7f,
-            142f,
-            20f,
-            44f,
-            0.3f,
-            0.38f,   //oversteer
-            2, //tier
-            "muscle",
-            new Color(0.1f, 0.5f, 0.8f)),
+            name: "muscle",
+            maxSpeed: 330,    //maxSpeed
+            handling: 1.05f,
+            dHandling: 1.7f,
+            acceleration:  142f,   //acceleration
+            boostStrength: 20f,   //boostStrength 
+            driftAcceleration: 44f,   //driftAcceleration
+            traction: 0.3f,   //traction
+            oversteer: 0.38f,
+            tier: 2, //tier
+            carBody: "muscle",
+            color: new Color(0.1f, 0.5f, 0.8f)),
 
         //8: tier 2.5
         new Car(
-            "Booster",
-            328,
-            1.85f,
-            2.6f,
-            105f,   //acceleration
-            70f,    //boostStrength
-            17f,    //driftAcceleration
-            0.6f,   //traction
-            0.1f,   //oversteer
-            2, //tier
-            "boost"),
+            name: "Booster",
+            maxSpeed: 328,    //maxSpeed
+            handling: 1.85f,
+            dHandling: 2.6f,
+            acceleration:  105f,   //acceleration
+            boostStrength: 70f,   //boostStrength 
+            driftAcceleration: 17f,   //driftAcceleration
+            traction: 0.6f,   //traction
+            oversteer: 0.1f,
+            tier: 2, //tier
+            carBody: "boost"
+            ),
 
         //9: tier 2
         new Car(
-            "grip",
-            332,
-            2.6f,
-            1.14f,
-            139f,   //acceleration
-            165f,  //brakes
-            41f,    //boostStrength
-            10f,     //driftAcceleration
-            1f,     //traction
-            -0.18f,   //oversteer
-            2, //tier
-            "grip"),
+            name: "grip",
+            maxSpeed: 332,    //maxSpeed
+            handling: 2.6f,
+            dHandling: 1.14f,
+            acceleration:  139f,   //acceleration
+            brakes: 165f,
+            boostStrength: 41f,   //boostStrength 
+            driftAcceleration: 10f,   //driftAcceleration
+            traction: 1f,   //traction
+            oversteer: -0.18f,
+            tier: 2, //tier
+            carBody: "grip"
+            ),
 
         //10: tier 3
         new Car(
-            "trueno8600x",
-            281,
-            2.52f,     //1.58f
-            2.96f,
-            130f,    //acceleration
-            58f,    //boostStrength
-            42f,    //driftAcceleration
-            0.33f,  //traction
-            0.25f,   //oversteer
-            2, //tier
-            "sidebooster",
-            Color.white),
+            name: "trueno8600x",
+            maxSpeed: 281,
+            handling: 2.52f,
+            dHandling: 2.96f,
+            acceleration:  130f,
+            brakes: 150f,
+            boostStrength: 58f, 
+            driftAcceleration: 42f,
+            traction: 0.33f,
+            oversteer: 0.25f,
+            tier: 2,
+            carBody: "sidebooster",
+            color: Color.white
+            ),
 
         //11: tier 2
         new Car(
-            "exotic",
-            314,
-            1.95f,
-            1.5f,
-            250f,    //acceleration
-            170,    //brakes
-            37f,    //boostStrength
-            28f,    //driftAcceleration
-            0.55f,  //traction
-            -0.1f,   //oversteer
-            2, //tier 
-            "smooth",
-            new Color(0.1f, 0.1f, 0.1f)),
+            name: "exotic",
+            maxSpeed: 314,
+            handling: 1.95f,
+            dHandling: 1.5f,
+            acceleration:  250f,
+            brakes: 170,
+            boostStrength: 37f,
+            driftAcceleration: 28f,
+            traction: 0.55f,
+            oversteer: -0.1f,
+            tier: 2,
+            carBody: "smooth",
+            color: new Color(0.1f, 0.1f, 0.1f)),
 
         //12: special
         new Car(
-            "sled",
-            250f,
-            2.13f,
-            2.13f,
-            10f,
-            0f,
-            120f,
-            -0.25f,
-            0.15f,   //oversteer
-            4, //tier
-            "sidebooster",
-            new Color(0.8f, 1, 1)),
+            name: "sled",
+            maxSpeed: 250f,
+            handling: 2.13f,
+            dHandling: 2.13f,
+            acceleration:  10f,
+            brakes: 100f,
+            boostStrength: 0f,
+            driftAcceleration: 120f,
+            traction: -0.25f,
+            oversteer: 0.15f,
+            tier: 4,
+            carBody: "sidebooster",
+            color: new Color(0.8f, 1, 1)),
 
         //13: tier 2
         new Car(
-            "slow god",
-            270f,
-            2.8f,
-            3f,
-            172f,    //acceleration
-            100f,   //brakes
-            40f,     //boostStrength
-            62f,     //driftAcceleration
-            0.72f,    //traction
-            -0.2f,   //oversteer
-            2, //tier
-            "sidebooster",
-            new Color(0.1f, 0.3f, 0.6f)),
+            name: "slow god",
+            maxSpeed: 270f,
+            handling: 2.8f,
+            dHandling: 172f,
+            acceleration:  172f,
+            brakes: 100f,
+            boostStrength: 40f,
+            driftAcceleration: 62f,
+            traction: 0.72f,
+            oversteer: -0.2f,
+            tier: 2,
+            carBody: "sidebooster",
+            color: new Color(0.1f, 0.3f, 0.6f)),
 
         //14: tier 2
         new Car(
-            "hover car",
-            276f,
-            1.3f,     //1.3f
-            2.65f,
-            108f,    //acceleration
-            100f,    //brakes
-            65f,    //boostStrength
-            62f,    //driftAcceleration
-            0.1f,   //traction
-            0.45f,   //oversteer
-            2, //tier
-            "hover"),
+            name: "hover car",
+            maxSpeed: 276f,
+            handling: 1.3f,
+            dHandling: 2.65f,
+            acceleration:  108f,
+            brakes: 100f,
+            boostStrength: 65f,
+            driftAcceleration: 62f,
+            traction: 0.1f,
+            oversteer: 0.45f,
+            tier: 2,
+            carBody: "hover"
+            ),
 
         //15: tier 2
         new Car(
-            "speedster",
-            332,
-            1.4f,
-            1.4f,
-            60,    //acceleration
-            100,   //brakes
-            80,    //boostStrength
-            72f,    //driftAcceleration
-            0.76f,   //traction
-            0.3f,   //oversteer
-            3, //tier 
-            "muscle",
-            Color.green),
+            name: "speedster",
+            maxSpeed: 332,
+            handling: 1.4f,
+            dHandling: 1.4f,
+            acceleration:  60,
+            brakes: 100,
+            boostStrength: 80,
+            driftAcceleration: 72f,
+            traction: 0.76f,
+            oversteer: 0.3f,
+            tier: 3,
+            carBody: "muscle",
+            color: Color.green
+            ),
 
         //16: tier 2
         new Car(

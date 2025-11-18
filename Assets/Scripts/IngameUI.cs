@@ -228,7 +228,7 @@ public class IngameUI : MonoBehaviour
                         );
 
                     //boostBar
-                    boostBar.SetBoostMeter(mainCarControl.GetBoostMeter(), mainCarControl.GetDoubleBoostMeter());
+                    boostBar.SetBoostMeter(mainCarControl.GetBoostMeter(), mainCarControl.isBoostReady() ? 1f : 0f);
 
                     if (playerInfo.isGoingWrongWay())
                     {

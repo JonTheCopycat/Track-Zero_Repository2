@@ -10,12 +10,12 @@ namespace CarBehaviour
 {
     public class CarControl : MonoBehaviour
     {
-        public static float speedFactor = 0.8f;
+        public static float speedFactor = 0.85f;
 
         protected Rigidbody rb;
         protected Car car;
         protected CarGetter carGetter;
-        //Collider collider;
+        protected CarInputHandler inputHandler;
 
         //timestamps
         float elapsedSinceBoost;
@@ -23,6 +23,7 @@ namespace CarBehaviour
         float countdownTimestamp;
         float extraTimestamp;
 
+        //---------------------------------------------------------------------------------------------------------------------------
         //current car stats
         public float maxSpeed;
         public float handling;
@@ -33,13 +34,16 @@ namespace CarBehaviour
         public float traction;
         public float oversteer;
 
+        //---------------------------------------------------------------------------------------------------------------------------
         //miscellaneous
-        public static readonly float slightDriftAngle = 1.5f;
-        public static readonly float fullDriftAngle = 3f;
+        public static readonly float slightDriftAngle = 2.5f;
+        public static readonly float fullDriftAngle = 5f;
         static readonly bool maxSpeedUsed = true;
         public static bool normalGravity = false;
         private static int carsInARow;
+        public static readonly float graceGripDistance = 1f;
 
+        //---------------------------------------------------------------------------------------------------------------------------
         //traction
         float currentTraction;
         float driftAngle;
@@ -59,6 +63,7 @@ namespace CarBehaviour
         float maxSpeedModifier;
         float accModifier;
 
+        //---------------------------------------------------------------------------------------------------------------------------
         //physics and functional variables
         Quaternion rotationFromHit;
         Vector3 currentUp;
@@ -78,12 +83,24 @@ namespace CarBehaviour
         float handlingAcc;
         float handlingLimiter;
         float driftAccLimiter;
-        bool BST_running;
         float springAcceleration;
         float springVelocity;
         float springPosition;
+        float airAngleDown;
 
+        //collision tracking
+        float lastCollisionStrength;
+        float lastCollisionTime;
 
+        protected GameObject FinishLine;
+
+        RaycastHit raycastHit;
+        
+        //public ScreenManager screenManager;
+
+        //===========================================================================================================================
+        // Flags
+        //---------------------------------------------------------------------------------------------------------------------------
 
         protected short status;
         public static short C_ENABLED = 0x1;
@@ -94,29 +111,21 @@ namespace CarBehaviour
         public static short C_SLIDING = 0x20;
         public static short C_TURBO = 0x40;
         public static short C_DRIFTING = 0x80;
-        public static short C_BSTING = 0x100;
-        public static short C_DBSTING = 0x200;
-        public static short C_BSTREADY = 0x400;
+        public static short C_B_ON = 0x100;
+        public static short C_B_DRIFT = 0x200;
+        public static short C_B_READY = 0x400;
 
         public static short C_CHARGING = 0x800;
 
+        bool BST_running;
+
         protected bool boostStart;
-
-
-        RaycastHit raycastHit;
-
-        //controls
-        protected CarInputHandler inputHandler;
-        float angleDown;
-        //public ScreenManager screenManager;
-
-        protected GameObject FinishLine;
 
         protected bool started = false;
 
-        //collision tracking
-        float lastCollisionStrength;
-        float lastCollisionTime;
+        //===========================================================================================================================
+        // Getters
+        //---------------------------------------------------------------------------------------------------------------------------
 
         public bool isBraking()
         {
@@ -140,7 +149,7 @@ namespace CarBehaviour
 
         public bool isBoostReady()
         {
-            return (status & C_BSTREADY) != 0;
+            return (status & C_B_READY) != 0;
         }
 
         public bool isGrounded()
@@ -225,12 +234,12 @@ namespace CarBehaviour
 
         public bool isBoosting()
         {
-            return (status & C_BSTING) != 0;
+            return (status & C_B_ON) != 0;
         }
 
-        public bool isDoubleBoosting()
+        public bool isBoostDrifting()
         {
-            return (status & C_DBSTING) != 0;
+            return (status & C_B_DRIFT) != 0;
         }
 
         public bool isBoostStart()
@@ -267,6 +276,9 @@ namespace CarBehaviour
             return (lastCollisionStrength, lastCollisionTime);
         }
 
+        //===========================================================================================================================
+        // Methods
+        //---------------------------------------------------------------------------------------------------------------------------
         // Start is called before the first frame update
         void OnEnable()
         {
@@ -287,6 +299,28 @@ namespace CarBehaviour
 
         }
 
+        private void FixedUpdate()
+        {
+            if (started)
+            {
+                CustomFixedUpdate();
+            }
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (started)
+            {
+                //change handling, publicly (so that other scripts that rely on this can use it without problem)
+                handling = 0.05f + car.GetHandling() * Mathf.Lerp(rb.velocity.magnitude / (450 * speedFactor), 0.8f, 0.3f) * speedFactor;
+                dHandling = 0.05f + car.GetDHandling() * Mathf.Lerp(rb.velocity.magnitude / (450 * speedFactor), 0.8f, 0.3f) * speedFactor;
+
+                CustomUpdate();
+            }
+
+        }
+
         public virtual void CustomStart()
         {
             //set up car
@@ -294,7 +328,7 @@ namespace CarBehaviour
             if (car != null)
             {
                 maxSpeed = car.GetMaxSpeed() * speedFactor;
-                acceleration = car.GetAcceleration() * 1f * speedFactor;
+                acceleration = car.GetAcceleration() * speedFactor;
                 boostStrength = car.GetBoostStrength() * speedFactor;
                 driftAcceleration = car.GetDriftAcceleration();
                 traction = car.GetTraction();
@@ -346,7 +380,7 @@ namespace CarBehaviour
             lastCollisionStrength = 0;
             lastCollisionTime = 0;
 
-            angleDown = 0;
+            airAngleDown = 0;
 
             //reset the car at the start
             BroadcastMessage("Reset");
@@ -358,28 +392,6 @@ namespace CarBehaviour
             //Time.timeScale = 0.5f;
             Debug.Log("CarControl");
             started = true;
-
-        }
-
-        private void FixedUpdate()
-        {
-            if (started)
-            {
-                CustomFixedUpdate();
-            }
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            if (started)
-            {
-                //change handling, publicaly (so that other scripts that rely on this can use it without problem)
-                handling = 0.25f + car.GetHandling() * 1f * speedFactor;
-                dHandling = 0.25f + car.GetDHandling() * 1f * speedFactor;
-
-                CustomUpdate();
-            }
 
         }
 
@@ -436,7 +448,7 @@ namespace CarBehaviour
                                       //it will be relative
                                       //center
                 Physics.Raycast(
-                    new Ray(rb.position + transform.up * suspendDistance, -currentUp), out temp, (0.75f + suspendDistance));
+                    new Ray(rb.position + transform.up * suspendDistance, -currentUp), out temp, (graceGripDistance + suspendDistance));
                 hits[0] = new RaycastHit();
 
                 //every corner/wheel
@@ -444,25 +456,25 @@ namespace CarBehaviour
                 currentPoint = rb.rotation * new Vector3(carGetter.GetHitboxSize().x, 0, carGetter.GetHitboxSize().y);
                 Physics.Raycast(
                     new Ray(rb.position + transform.up * suspendDistance + currentPoint * 0.5f, Vector3.RotateTowards(-currentUp, currentPoint.normalized, 10 * Mathf.Deg2Rad, 0)),
-                    out temp, (0.75f + suspendDistance));
+                    out temp, (graceGripDistance + suspendDistance));
                 hits[1] = temp;
 
                 currentPoint = rb.rotation * new Vector3(-carGetter.GetHitboxSize().x, 0, carGetter.GetHitboxSize().y);
                 Physics.Raycast(
                     new Ray(rb.position + transform.up * suspendDistance * transform.localScale.y + currentPoint * 0.5f, Vector3.RotateTowards(-currentUp, currentPoint.normalized, 10 * Mathf.Deg2Rad, 0)),
-                    out temp, (0.75f + suspendDistance) * transform.localScale.y);
+                    out temp, (graceGripDistance + suspendDistance) * transform.localScale.y);
                 hits[2] = temp;
 
                 currentPoint = rb.rotation * new Vector3(-carGetter.GetHitboxSize().x, 0, -carGetter.GetHitboxSize().y);
                 Physics.Raycast(
                     new Ray(rb.position + transform.up * suspendDistance * transform.localScale.y + currentPoint * 0.5f, Vector3.RotateTowards(-currentUp, currentPoint.normalized, 10 * Mathf.Deg2Rad, 0)),
-                    out temp, (0.75f + suspendDistance));
+                    out temp, (graceGripDistance + suspendDistance));
                 hits[3] = temp;
 
                 currentPoint = rb.rotation * new Vector3(carGetter.GetHitboxSize().x, 0, -carGetter.GetHitboxSize().y);
                 Physics.Raycast(
                     new Ray(rb.position + transform.up * suspendDistance + currentPoint * 0.5f, Vector3.RotateTowards(-currentUp, currentPoint.normalized, 10 * Mathf.Deg2Rad, 0)),
-                    out temp, (0.75f + suspendDistance));
+                    out temp, (graceGripDistance + suspendDistance));
                 hits[4] = temp;
 
                 int groundHits = 0;
@@ -582,8 +594,18 @@ namespace CarBehaviour
 
                     //rb.position = raycastHit.point + raycastHit.normal * suspendDistance;
                     //}
-
-                    rb.MoveRotation(rotationFromHit);
+                    Quaternion smoothRotation = Quaternion.Lerp(rb.rotation, rotationFromHit, 0.33f * 60 * Time.fixedDeltaTime);
+                    
+                    if (Quaternion.Angle(rotationFromHit, smoothRotation) < 0.01f)
+                    {
+                        smoothRotation = rotationFromHit;
+                    }
+                    else
+                    {
+                        //cap the distance from the real rotation
+                        smoothRotation = Quaternion.RotateTowards(rotationFromHit, smoothRotation, 1.5f);
+                    }
+                    rb.MoveRotation(smoothRotation);
                     //rb.MoveRotation(rotationFromHit);
 
                     //using the force approach
@@ -647,7 +669,7 @@ namespace CarBehaviour
 
                     if (isGrounded())
                     {
-                        angleDown = Mathf.Clamp(Vector3.Angle(rb.velocity, currentUp) - 90, -60, 60);
+                        airAngleDown = Mathf.Clamp(Vector3.Angle(rb.velocity, currentUp) - 90, -60, 60);
                     }
 
                     status &= (short)~(C_ONICE | C_ONDIRT);
@@ -667,16 +689,16 @@ namespace CarBehaviour
                     {
                         pitch -= 1;
                     }
-                    angleDown = Mathf.Clamp(angleDown + (3 * pitch), -50, 50);
+                    airAngleDown = Mathf.Clamp(airAngleDown + (3 * pitch), -50, 50);
 
                     //this is the rotation if the car was not angled in any way
                     targetRotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(rb.rotation * Vector3.forward, currentUp), currentUp);
 
                     float horizontalAngle = Vector3.Angle(Vector3.ProjectOnPlane(rb.rotation * Vector3.forward, currentUp), Vector3.ProjectOnPlane(rb.velocity, currentUp));
 
-                    Vector3 newForward = Vector3.RotateTowards(targetRotation * Vector3.forward, -currentUp, angleDown * Mathf.Deg2Rad * Mathf.Cos(horizontalAngle * Mathf.Deg2Rad), 0);
+                    Vector3 newForward = Vector3.RotateTowards(targetRotation * Vector3.forward, -currentUp, airAngleDown * Mathf.Deg2Rad * Mathf.Cos(horizontalAngle * Mathf.Deg2Rad), 0);
 
-                    Vector3 newUp = Vector3.RotateTowards(currentUp, Vector3.Project(rb.velocity, targetRotation * Vector3.right), angleDown * Mathf.Deg2Rad * Mathf.Sin(horizontalAngle * Mathf.Deg2Rad), 0);
+                    Vector3 newUp = Vector3.RotateTowards(currentUp, Vector3.Project(rb.velocity, targetRotation * Vector3.right), airAngleDown * Mathf.Deg2Rad * Mathf.Sin(horizontalAngle * Mathf.Deg2Rad), 0);
                     targetRotation = Quaternion.LookRotation(newForward, newUp);
 
 
@@ -703,7 +725,7 @@ namespace CarBehaviour
                         {
                             if (Physics.Raycast(new Ray(rb.position, -currentUp), out raycastHit, 25f * transform.localScale.y / Mathf.Sin(Mathf.Deg2Rad * 30)) && !raycastHit.collider.CompareTag("KillPlane") && !raycastHit.collider.CompareTag("Guardrail"))
                             {
-                                angleDown = Mathf.Clamp(Vector3.Angle(targetRotation * Vector3.forward, raycastHit.normal) - 90, -60, 60);
+                                airAngleDown = Mathf.Clamp(Vector3.Angle(targetRotation * Vector3.forward, raycastHit.normal) - 90, -60, 60);
 
                                 currentUp = raycastHit.normal;
                                 if (rb.velocity != Vector3.zero && Vector3.Angle(rb.velocity, -currentUp) > 45f)
@@ -716,7 +738,7 @@ namespace CarBehaviour
                             }
                             else
                             {
-                                angleDown = Mathf.Clamp(Vector3.Angle(targetRotation * Vector3.forward, Vector3.up) - 90, -60, 60);
+                                airAngleDown = Mathf.Clamp(Vector3.Angle(targetRotation * Vector3.forward, Vector3.up) - 90, -60, 60);
 
                                 currentUp = Vector3.up;
                                 if (rb.velocity != Vector3.zero && Vector3.Angle(rb.velocity, Vector3.down) > 45f)
@@ -982,7 +1004,7 @@ namespace CarBehaviour
                     }
                     rb.position += rb.rotation * Vector3.up * 0.1f /*+ collision.GetContact(0).normal.normalized * 0.1f*/;
 
-                    rb.velocity -= rb.velocity.normalized * Vector3.Project(lastVelocity, -collision.GetContact(0).normal).magnitude * 0.2f;
+                    rb.velocity -= rb.velocity.normalized * Vector3.Project(lastVelocity, -collision.GetContact(0).normal).magnitude * 0.5f;
                     boostMeter = Mathf.Clamp01(boostMeter - Mathf.Abs(lastCollisionStrength) / 1200);
 
                     //rb.velocity += collision.GetContact(0).normal.normalized * 5f;
@@ -1120,7 +1142,6 @@ namespace CarBehaviour
                 if (inputHandler.GetAcceleration() >= 0.5f)
                 {
                     BoostRoutine = StartCoroutine(Boost(50f * speedFactor, 0.5f));
-                    rb.velocity += transform.forward * 50;
                 }
 
 
@@ -1138,7 +1159,7 @@ namespace CarBehaviour
 
             if (maxSpeedUsed)
             {
-
+                if (frontProjection.magnitude > maxSpeed + 0.01f) return;
 
                 if (isDrivingOnDirt())
                 {
@@ -1192,7 +1213,7 @@ namespace CarBehaviour
             }
             if (isSliding())
             {
-                float brakingStrength = car.GetBrakes() * 0.66f;
+                float brakingStrength = car.GetBrakes() * 0.33f;
                 rb.velocity += rb.velocity.normalized * -brakingStrength * speedFactor * inputHandler.GetEBrakes() * Time.deltaTime;
             }
         }
@@ -1202,11 +1223,11 @@ namespace CarBehaviour
             float modifiedAcc = Mathf.Lerp(125, 175, (acceleration * 2 / speedFactor) / 250) * speedFactor;
             if ((C_ONDIRT & status) != 0)
             {
-                rb.AddForce(rb.velocity * rb.mass * -6f * Time.deltaTime);
+                rb.AddForce(rb.velocity * rb.mass * -9f * Time.deltaTime);
             }
             else if ((C_ONDIRT & status) == 0)
             {
-                rb.AddForce(rb.velocity * rb.mass * -0.5f * Time.deltaTime);
+                rb.AddForce(rb.velocity * rb.mass * -3f * Time.deltaTime);
             }
 
         }
@@ -1258,7 +1279,7 @@ namespace CarBehaviour
 
             if (isDrifting())
             {
-                currentHandling = handling * 1.5f + (isSliding() ? 0.5f : 0) + oversteer + 0.2f * rb.velocity.magnitude / (350 * speedFactor);
+                currentHandling = handling * 1.5f + (isSliding() ? 0.6f : 0) + oversteer + 0.2f * rb.velocity.magnitude / (350 * speedFactor);
 
             }
             if (isBraking())
@@ -1345,19 +1366,18 @@ namespace CarBehaviour
 
                 if (isSliding())
                 {
-                    minimumResponsiveness = 2f;
-                    exponential = 4f * responceModifier * (targetVelocity - handlingVel);
+                    minimumResponsiveness = 6f;
+                    exponential = 6f * responceModifier * (targetVelocity - handlingVel);
                 }
                 else if (isDrifting())
                 {
-                    minimumResponsiveness = 3f;
-                    exponential = 4f * responceModifier * (targetVelocity - handlingVel);
+                    minimumResponsiveness = 4.5f;
+                    exponential = 6f * responceModifier * (targetVelocity - handlingVel);
                 }
                 else
                 {
-                    //(Mathf.Abs(targetVelocity) > Mathf.Abs(handlingVel) && handlingVel * targetVelocity > 0) || Mathf.Abs(handlingVel) < 0.01f
-                    minimumResponsiveness = 6f;
-                    exponential = 4f * responceModifier * (targetVelocity - handlingVel);
+                    minimumResponsiveness = 3f;
+                    exponential = 6f * responceModifier * (targetVelocity - handlingVel);
                 }
                 float linear = minimumResponsiveness * responceModifier * (targetVelocity - handlingVel) / Mathf.Abs(targetVelocity - handlingVel);
 
@@ -1482,43 +1502,52 @@ namespace CarBehaviour
 
         private void CalculateBoost()
         {
-            ////sliding and boosting
-            //if ((status & C_SLIDING) == 0)
-            //{
-            //    //boost release
-            //    if (quickBoostMeter >= 0.01f)
-            //    {
+            //sliding and boosting
+            if ((status & C_SLIDING) == 0)
+            {
+                //boost release
+                if (isBoostReady())
+                {
 
-            //        QuickBoostRoutine = StartCoroutine(Boost(boostStrength * quickBoostMeter * 2f, 0.1f, 0.0f));
-            //        status &= (byte)~C_BSTREADY;
-            //        quickBoostMeter = 0;
-            //        elapsedSinceQuickBoost = 0;
-            //    }
-            //    else if (quickBoostMeter < 0.01f)
-            //    {
-            //        quickBoostMeter = 0;
-            //        status &= (byte)~C_BSTREADY;
-            //    }
+                    QuickBoostRoutine = StartCoroutine(Boost(boostStrength * 2f, 0.4f));
+                    status &= (short)~C_B_READY;
+                    boostMeter = 0;
+                    elapsedSinceQuickBoost = 0;
+                }
+                else
+                {
+                    boostMeter = boostMeter = Mathf.Clamp(boostMeter - 1 * Time.deltaTime, 0, 1f); ;
+                    status &= (short)~C_B_READY;
+                }
 
-            //}
-            //else
-            //{
-            //    //boost charge
-            //    if (elapsedSinceQuickBoost >= 0.2f)
-            //    {
-            //        quickBoostMeter = Mathf.Clamp(quickBoostMeter + Mathf.Abs(handlingVel / handling) * 0.75f * Time.deltaTime, 0, 1f);
-            //    }
-            //    //boost condition
-            //    //if (sideProjection.magnitude >= frontProjection.magnitude)
-            //    //{
-            //    //    boostReady = true;
-            //    //}
-            //    if (quickBoostMeter >= 1)
-            //    {
-            //        status |= C_BSTREADY;
-            //        quickBoostMeter = 1f;
-            //    }
-            //}
+            }
+            else
+            {
+                //boost charge
+                if (elapsedSinceQuickBoost >= 0.2f)
+                {
+                    boostMeter = Mathf.Clamp(boostMeter + (1f + (1 - boostStrength / 100f) * 2f) * Time.deltaTime, 0, 1f);
+                }
+                //boost condition
+                //if (sideProjection.magnitude >= frontProjection.magnitude)
+                //{
+                //    boostReady = true;
+                //}
+                if (boostMeter >= 1)
+                {
+                    status |= C_B_READY;
+                    boostMeter = 1f;
+                }
+            }
+
+            if (isBoosting())
+            {
+                status |= C_B_DRIFT;
+            }
+            else if (!isDrifting() && !isSliding())
+            {
+                status &= (short)~C_B_DRIFT;
+            }
 
             ////drifting to charge boost (turbo)
             //if ((status & C_DRIFTING) != 0)
@@ -1542,7 +1571,7 @@ namespace CarBehaviour
             //    {
 
             //        BoostRoutine = StartCoroutine(Boost(boostStrength * boostMeter, 0.5f * boostMeter));
-            //        status &= (byte)~C_BSTREADY;
+            //        status &= (short)~C_BSTREADY;
             //        boostMeter = 0;
             //    }
             //}
@@ -1577,107 +1606,108 @@ namespace CarBehaviour
                 //    status &= (short)~C_BSTING;
                 //}
 
-                //f-zero style
-                if (inputHandler.GetBoost())
-                {
-                    //boost release
-                    if (boostMeter >= 0.01f)
-                    {
-                        BoostRoutine = StartCoroutine(BoostWithMeter(boostStrength, Mathf.Lerp(boostStrength / 100f, 0.5f, 0.7f)));
-                    }
-                    else
-                    {
-                        boostMeter = 0;
-                    }
-                }
+                ////f-zero style
+                //if (inputHandler.GetBoost())
+                //{
+                //    //boost release
+                //    if (boostMeter >= 0.01f)
+                //    {
+                //        BoostRoutine = StartCoroutine(BoostWithMeter(boostStrength, Mathf.Lerp(boostStrength / 100f, 0.4f, 0.8f)));
+                //    }
+                //    else
+                //    {
+                //        boostMeter = 0;
+                //    }
+                //}
             }
 
-            //boost charge: charge normally when sliding, charge slower while only drifting
-            if (isSliding())
-            {
+            ////boost charge: charge normally when sliding, charge slower while only drifting
+            //if (isSliding())
+            //{
 
-                if (elapsedSinceBoost >= 0.1f)
-                {
-                    boostMeter = Mathf.Clamp(boostMeter + inputHandler.GetEBrakes() * (0.15f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / (300 * speedFactor)) * Time.deltaTime, 0, 1);
+            //    if (elapsedSinceBoost >= 0.1f)
+            //    {
+            //        boostMeter = Mathf.Clamp(boostMeter + inputHandler.GetEBrakes() * (0.1f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / (300 * speedFactor)) * Time.deltaTime, 0, 1);
 
-                    //doubleBoostMeter = Mathf.Clamp(doubleBoostMeter + inputHandler.GetEBrakes() * (0.2f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / (300 * speedFactor)) * Time.deltaTime, 0, 1);
-                }
-            }
-            if (isBraking())
-            {
+            //        //doubleBoostMeter = Mathf.Clamp(doubleBoostMeter + inputHandler.GetEBrakes() * (0.2f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / (300 * speedFactor)) * Time.deltaTime, 0, 1);
+            //    }
+            //}
+            //if (isBraking())
+            //{
 
-                if (elapsedSinceBoost >= 0.1f)
-                {
-                    boostMeter = Mathf.Clamp(boostMeter + inputHandler.GetBrakes() * (0.3f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / (300 * speedFactor)) * Time.deltaTime, 0, 1);
+            //    if (elapsedSinceBoost >= 0.1f)
+            //    {
+            //        boostMeter = Mathf.Clamp(boostMeter + inputHandler.GetBrakes() * (0.2f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / (300 * speedFactor)) * Time.deltaTime, 0, 1);
 
-                    //doubleBoostMeter = Mathf.Clamp(doubleBoostMeter + inputHandler.GetBrakes() * (0.3f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / (300 * speedFactor)) * Time.deltaTime, 0, 1);
-                }
-            }
-            if (isDrifting())
-            {
-                //boost charge
-                if (elapsedSinceBoost >= 0.1f)
-                {
-                    boostMeter = Mathf.Clamp(boostMeter + driftAngle / 45 * (0.3f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / 100) * Time.deltaTime, 0, 1);
-                    if (isSliding())
-                    {
-                        //doubleBoostMeter = Mathf.Clamp(doubleBoostMeter + inputHandler.GetBrakes() * driftAngle / 45 * (0.3f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / 100) * Time.deltaTime, 0, 1);
-                    }
-                }
-            }
+            //        //doubleBoostMeter = Mathf.Clamp(doubleBoostMeter + inputHandler.GetBrakes() * (0.3f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / (300 * speedFactor)) * Time.deltaTime, 0, 1);
+            //    }
+            //}
+            //if (isDrifting())
+            //{
+            //    //boost charge
+            //    if (elapsedSinceBoost >= 0.1f)
+            //    {
+            //        boostMeter = Mathf.Clamp(boostMeter + driftAngle / 45 * (0.2f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / 100) * Time.deltaTime, 0, 1);
+            //        if (isSliding())
+            //        {
+            //            //doubleBoostMeter = Mathf.Clamp(doubleBoostMeter + inputHandler.GetBrakes() * driftAngle / 45 * (0.3f) * Mathf.Clamp01((rb.velocity.magnitude - 50) / 100) * Time.deltaTime, 0, 1);
+            //        }
+            //    }
+            //}
 
             //charge panels
             if (isDrivingOnTurbo())
             {
-                boostMeter = Mathf.Clamp(boostMeter + 0.6f * Time.deltaTime, 0, 1);
+                //boostMeter = Mathf.Clamp(boostMeter + 0.4f * Time.deltaTime, 0, 1);
+                rb.velocity += rb.rotation * Vector3.forward * boostStrength / 2 * Time.deltaTime;
             }
 
-            //speed very slowly charges boost
-            if (rb.velocity.magnitude > 100f)
-            {
-                if (elapsedSinceBoost >= 0.1f)
-                {
-                    boostMeter = Mathf.Clamp(boostMeter + (rb.velocity.magnitude / (300 * speedFactor)) / 50 * Time.deltaTime, 0, 1);
-                }
-            }
+            ////speed very slowly charges boost
+            //if (rb.velocity.magnitude > 100f)
+            //{
+            //    if (elapsedSinceBoost >= 0.1f)
+            //    {
+            //        boostMeter = Mathf.Clamp(boostMeter + (rb.velocity.magnitude / (300 * speedFactor)) / 50 * Time.deltaTime, 0, 1);
+            //    }
+            //}
 
             //sliding and boosting with the second boost bar
-            if (!isSliding())
-            {
-                //boost release
-                if (doubleBoostMeter > 0.0f)
-                {
+            //if (!isSliding())
+            //{
+            //    //boost release
+            //    if (doubleBoostMeter > 0.0f)
+            //    {
 
-                    QuickBoostRoutine = StartCoroutine(Boost(boostStrength * doubleBoostMeter * 2f, 0.05f, 0.0f));
-                    status &= (short)~C_BSTREADY;
-                    doubleBoostMeter = 0;
-                    elapsedSinceQuickBoost = 0;
-                }
-                else if (doubleBoostMeter <= 0.0f)
-                {
-                    doubleBoostMeter = 0;
-                    status &= (short)~C_BSTREADY;
-                }
+            //        QuickBoostRoutine = StartCoroutine(Boost(boostStrength * doubleBoostMeter * 2f, 0.05f, 0.0f));
+            //        status &= (short)~C_BSTREADY;
+            //        doubleBoostMeter = 0;
+            //        elapsedSinceQuickBoost = 0;
+            //    }
+            //    else if (doubleBoostMeter <= 0.0f)
+            //    {
+            //        doubleBoostMeter = 0;
+            //        status &= (short)~C_BSTREADY;
+            //    }
 
-            }
-            else
-            {
-                //boost charge
-                if (elapsedSinceQuickBoost >= 0.2f)
-                {
-                    doubleBoostMeter = Mathf.Clamp(doubleBoostMeter + driftAngle / 45f * Time.deltaTime, 0, 1f);
-                }
-                //boost condition
-                //if (sideProjection.magnitude >= frontProjection.magnitude)
-                //{
-                //    boostReady = true;
-                //}
-                if (doubleBoostMeter >= 1)
-                {
-                    status |= C_BSTREADY;
-                    doubleBoostMeter = 1f;
-                }
-            }
+            //}
+            //else
+            //{
+            //    //boost charge
+            //    if (elapsedSinceQuickBoost >= 0.2f)
+            //    {
+            //        doubleBoostMeter = Mathf.Clamp(doubleBoostMeter + driftAngle / 45f * Time.deltaTime, 0, 1f);
+            //    }
+            //    //boost condition
+            //    //if (sideProjection.magnitude >= frontProjection.magnitude)
+            //    //{
+            //    //    boostReady = true;
+            //    //}
+            //    if (doubleBoostMeter >= 1)
+            //    {
+            //        status |= C_BSTREADY;
+            //        doubleBoostMeter = 1f;
+            //    }
+            //}
         }
 
         private void TractionControl(float deltaTime)
@@ -1691,18 +1721,18 @@ namespace CarBehaviour
 
             //drift conditions by angle (for 2.4 - current)
             float deltaAngle = Mathf.Atan2(Mathf.Clamp(rawFriction, 0, sideProjection.magnitude), frontProjection.magnitude);
-            if ((status & C_DRIFTING) == 0 && (driftAngle > fullDriftAngle || (Mathf.Abs(handlingVel) - deltaAngle) * Mathf.Rad2Deg > fullDriftAngle))
+            if ((status & C_DRIFTING) == 0 && driftAngle > fullDriftAngle)
             {
                 status |= C_DRIFTING;
             }
 
-            else if ((status & C_DRIFTING) != 0 && driftAngle < slightDriftAngle && (Mathf.Abs(handlingVel) - deltaAngle) * Mathf.Rad2Deg <= fullDriftAngle)
+            else if ((status & C_DRIFTING) != 0 && driftAngle < slightDriftAngle)
             {
                 status &= (short)~C_DRIFTING;
             }
 
-            float newTraction = Mathf.LerpUnclamped(0.02f, 0.07f, traction) * speedFactor + (isDrifting() ? 0 : 0.02f);
-
+            float newTraction = Mathf.LerpUnclamped(0.025f, 0.075f, traction) * speedFactor + Mathf.Lerp(0.00f, 0.03f, driftAngle / 90) + (isDrifting() ? 0.00f : 0.1f);
+            
             if (!isGrounded())
             {
                 newTraction *= 0.5f;
@@ -1711,7 +1741,7 @@ namespace CarBehaviour
             if (inputHandler.GetSteering() * ((Quaternion.Inverse(rb.rotation) * rb.velocity).x) > 0 && false)
             {
                 //Debug.DrawRay(rb.position + rb.transform.up, rb.transform.up, Color.yellow, Time.deltaTime);
-                currentTraction = newTraction * (1 - 0.1f * Mathf.Abs(inputHandler.GetSteering()));
+                currentTraction = newTraction;
             }
             else
             {
@@ -1757,7 +1787,7 @@ namespace CarBehaviour
                     //Mathf.Clamp01(driftAngle / (fullDriftAngle * 2))
 
                     //true match + capped (2.9)
-                    float standInSpeed = Mathf.Min(100f, rb.velocity.magnitude * 0.5f);
+                    float standInSpeed = Mathf.Min(20f, rb.velocity.magnitude * 0.5f);
                     float trueMatch = 0;
                     float discriminant;
                     if (frontProjection.magnitude > standInSpeed)
@@ -1778,7 +1808,11 @@ namespace CarBehaviour
                     //    )
                     //    * inputHandler.GetAcceleration() * deltaTime;
 
-                    rb.velocity += rb.rotation * Vector3.forward * (trueMatch * 0.85f * 60 + driftAcceleration) * Mathf.Clamp01(driftAngle / (fullDriftAngle * 2)) * inputHandler.GetAcceleration() * deltaTime;
+                    rb.velocity += rb.rotation * Vector3.forward * (trueMatch * 0.85f * 60) * Mathf.Clamp01(driftAngle / (fullDriftAngle * 2)) * inputHandler.GetAcceleration() * deltaTime;
+                    if (isBoostDrifting())
+                    {
+                        rb.velocity += rb.rotation * Vector3.forward * (trueMatch * 0.1f * 60 + driftAcceleration * 0.8f) * speedFactor * Mathf.Clamp01(driftAngle / (fullDriftAngle * 2)) * inputHandler.GetAcceleration() * deltaTime;
+                    }
 
                     //what if no perfect speed conservation? constant accel version
                     //rb.velocity += rb.rotation * Vector3.forward * (driftAcceleration * 2) * Mathf.Clamp01(driftAngle / 30) * inputHandler.GetAcceleration() * deltaTime;
@@ -1806,9 +1840,6 @@ namespace CarBehaviour
 
                         //treat drift acceleration as normal acceleration, but using frontvelocity
                         //rb.velocity += rb.rotation * Vector3.forward * (maxSpeed - frontProjection.magnitude) / maxSpeed * driftAcceleration * 10 * inputHandler.GetAcceleration() * deltaTime;
-
-                        
-
                     }
                 }
                 else
@@ -1869,7 +1900,7 @@ namespace CarBehaviour
 
         IEnumerator Boost(float strength, float length)
         {
-            status |= (short)C_BSTING;
+            status |= (short)C_B_ON;
             boostStart = true;
             BST_running = true;
 
@@ -1894,12 +1925,12 @@ namespace CarBehaviour
             }
 
             elapsedSinceBoost = 0;
-            status &= (short)~C_BSTING;
+            status &= (short)~C_B_ON;
             BST_running = false;
         }
         IEnumerator Boost(float strength, float length, float cooldown)
         {
-            status |= (short)C_BSTING;
+            status |= (short)C_B_ON;
             boostStart = true;
             BST_running = true;
 
@@ -1925,7 +1956,7 @@ namespace CarBehaviour
 
 
             elapsedSinceBoost = 0;
-            status &= (short)~C_BSTING;
+            status &= (short)~C_B_ON;
             timestamp = Time.time;
 
             while (Time.time - timestamp < cooldown && inputHandler.GetAcceleration() > 0.01f)
@@ -1945,7 +1976,7 @@ namespace CarBehaviour
         /// <returns></returns>
         IEnumerator BoostWithMeter(float strength, float drain, float cooldown = 0.25f)
         {
-            status |= (short)C_BSTING;
+            status |= (short)C_B_ON;
             BST_running = true;
             boostStart = true;
 
@@ -1959,12 +1990,14 @@ namespace CarBehaviour
                 //{
                 //    rb.velocity += rb.rotation * Vector3.forward * ((maxSpeed + strength) - rb.velocity.magnitude) * 0.66f * Time.deltaTime;
                 //}
-                rb.velocity += rb.rotation * Vector3.forward * Mathf.Pow(0.997f, frontProjection.magnitude / speedFactor - 200) * strength * Time.deltaTime;
+                rb.velocity += rb.rotation * Vector3.forward * strength * Time.deltaTime;
 
                 boostMeter -= drain * Time.deltaTime;
 
                 yield return null;
                 boostStart = false;
+
+                if (boostMeter < 0.01f) break;
             }
 
             if (boostMeter < 0.01f)
@@ -1972,7 +2005,7 @@ namespace CarBehaviour
 
 
             elapsedSinceBoost = 0;
-            status &= (short)~C_BSTING;
+            status &= (short)~C_B_ON;
             float timestamp = Time.time;
 
             while (Time.time - timestamp < cooldown && inputHandler.GetAcceleration() > 0.01f)
