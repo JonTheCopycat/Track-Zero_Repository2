@@ -109,13 +109,15 @@ namespace Cars
             transform.localScale = baseSize;
         }
 
-        IEnumerator AnimateOn()
-        {
-            while (false)
-            {
-                yield return null;
-            }
-        }
+        //IEnumerator AnimateOn()
+        //{
+        //    float timestamp = Time.time;
+
+        //    while (false)
+        //    {
+        //        yield return null;
+        //    }
+        //}
 
         IEnumerator AnimateStop(float length)
         {

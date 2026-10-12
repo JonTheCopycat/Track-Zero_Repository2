@@ -46,7 +46,7 @@ namespace CarBehaviour
         float currentTraction;
         float driftAngle;
         float downforce;
-        float rawDownforce;
+        //float rawDownforce;
         //full drift before hand
         //the start of a drift should not accelerate the player (into a wall)
         //but the end of a drift can be extended as the end drift angle is smaller than the start angle
@@ -353,7 +353,7 @@ namespace CarBehaviour
             tractionModifier = 1;
             oversteerModifier = 0;
             downforce = 0;
-            rawDownforce = 0;
+            //rawDownforce = 0;
 
             maxSpeedModifier = 0;
             accModifier = 0;
@@ -997,7 +997,7 @@ namespace CarBehaviour
 
                 if (contact.thisCollider.tag.Equals("Player"))
                 {
-                    if (Vector3.Angle(transform.up, collision.GetContact(0).normal) > 45f && false)
+                    if (Vector3.Angle(transform.up, collision.GetContact(0).normal) > 45f)
                     {
                         //track the collision
 
@@ -1071,7 +1071,7 @@ namespace CarBehaviour
 
                 if (contact.thisCollider.tag.Equals("Player"))
                 {
-                    if (Vector3.Angle(transform.up, collision.GetContact(0).normal) > 45f && false)
+                    if (Vector3.Angle(transform.up, collision.GetContact(0).normal) > 45f)
                     {
 
                         //if (Vector3.Angle(lastVelocity, rb.velocity) > 10f)
@@ -2047,7 +2047,6 @@ namespace CarBehaviour
             float timestamp = Time.time;
 
             float d = direction > 0.1f ? 1 : (direction < -0.1f ? -1 : 0);
-            float rawFriction;
 
             //rb.velocity += rb.rotation * Vector3.right * d * (strength) * (rb.velocity.magnitude / (300 * speedFactor));
             float duration = 0.2f;

@@ -19,8 +19,8 @@ namespace CarBehaviour
 
         //ai variables
         bool boosting = false;
-        int turnState = 0;
-        bool reversing = false;
+        //int turnState = 0;
+        //bool reversing = false;
         /*
          * 0 = straightaway
          * 1 = slightturn

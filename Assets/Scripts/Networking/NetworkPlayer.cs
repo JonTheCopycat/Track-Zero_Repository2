@@ -17,7 +17,7 @@ public class NetworkPlayer : NetworkBehaviour
     NetworkVariable<int> chosenCar = new NetworkVariable<int>();
     NetworkVariable<bool> playerReady = new NetworkVariable<bool>(false);
 
-    private bool connected = false;
+    //private bool connected = false;
 
     //NetworkVariable<Vector3> position;
 
@@ -55,7 +55,7 @@ public class NetworkPlayer : NetworkBehaviour
         }
     }
 
-    private void OnDestroy()
+    private new void OnDestroy()
     {
         allPlayerIds.Remove(PlayerId);
         allPlayerObjects.Remove(this);

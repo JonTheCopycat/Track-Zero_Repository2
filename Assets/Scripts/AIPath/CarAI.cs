@@ -136,8 +136,6 @@ namespace AI
             {
                 //handle track segments
                 currentSegment = playerInfo.GetCheckpointsPassed();
-                //keep track of last point to detect large leaps
-                RaycastHit tempHit = new RaycastHit();
 
                 //everything else
                 RaycastHit result;

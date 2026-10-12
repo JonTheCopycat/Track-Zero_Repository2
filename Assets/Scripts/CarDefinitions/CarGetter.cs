@@ -17,8 +17,6 @@ namespace Cars
         public bool usingProvidedCar = false;
         public Car providedCar = null;
 
-        bool started = false;
-
         public CarModel GetCarModel()
         {
             return carModel;
@@ -68,7 +66,6 @@ namespace Cars
             hitbox.transform.localPosition = offset /*+ new Vector3(0, 0.5f, 0)*/;
 
             Debug.Log("CarGetter");
-            started = true;
         }
 
         // Update is called once per frame
