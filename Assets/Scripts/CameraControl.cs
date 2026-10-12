@@ -234,7 +234,7 @@ public class CameraControl : MonoBehaviour
             }
 
             //calculate the final direction to always look at the player
-            if (Mathf.Floor(target.velocity.magnitude) >= 60 && !lockedCam)
+            if (Mathf.Floor(target.velocity.magnitude) >= 10 && !lockedCam)
             {
                 //postOffsetRotDirection = carDirection * Quaternion.Euler(new Vector3((Quaternion.Inverse(carDirection) * extraOffset).y * 0.25f * Mathf.Rad2Deg,
                 //    (Quaternion.Inverse(carDirection) * extraOffset).x * 0.25f * Mathf.Rad2Deg,

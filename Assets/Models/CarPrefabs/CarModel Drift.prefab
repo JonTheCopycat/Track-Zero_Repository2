@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3451425495387948100}
   - component: {fileID: 1842732712291022750}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: CarModel Drift
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -120,6 +120,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 606294922145539125, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1031601165979628634, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751993359516239629, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2057098229209462930, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2498852893899705282, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3181854565094917088, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4346390979109727816, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -163,6 +187,10 @@ PrefabInstance:
     - target: {fileID: 7561304237036820382, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
       propertyPath: m_Name
       value: CarBoosters
+      objectReference: {fileID: 0}
+    - target: {fileID: 7561304237036820382, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
@@ -233,6 +261,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8189441306686973266, guid: 0bfc04a7aa011e244a90ab4bb3b77a85, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: -7117993561910019839, guid: 0bfc04a7aa011e244a90ab4bb3b77a85, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -249,12 +281,37 @@ PrefabInstance:
       propertyPath: m_Name
       value: CarModel_Drift
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0bfc04a7aa011e244a90ab4bb3b77a85, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0bfc04a7aa011e244a90ab4bb3b77a85, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 1071658425406244909, guid: 0bfc04a7aa011e244a90ab4bb3b77a85, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: d7c8afa71965f414c99515411c82d29d, type: 2}
+    - target: {fileID: 2888424433883749846, guid: 0bfc04a7aa011e244a90ab4bb3b77a85, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3461524970777590456, guid: 0bfc04a7aa011e244a90ab4bb3b77a85, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3616032231417832517, guid: 0bfc04a7aa011e244a90ab4bb3b77a85, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0bfc04a7aa011e244a90ab4bb3b77a85, type: 3}
+--- !u!1 &6616300835829081299 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0bfc04a7aa011e244a90ab4bb3b77a85, type: 3}
+  m_PrefabInstance: {fileID: 6273720301158881666}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5807957017385909865 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0bfc04a7aa011e244a90ab4bb3b77a85, type: 3}
@@ -285,6 +342,20 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2888424433883749846, guid: 0bfc04a7aa011e244a90ab4bb3b77a85, type: 3}
   m_PrefabInstance: {fileID: 6273720301158881666}
   m_PrefabAsset: {fileID: 0}
+--- !u!64 &8290239047224823061
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6616300835829081299}
+  m_Material: {fileID: 13400000, guid: b128b79057f43f34a83aa545eb41dd92, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5010495337818225612, guid: 0bfc04a7aa011e244a90ab4bb3b77a85, type: 3}
 --- !u!1001 &6634947425122249424
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -348,6 +419,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 606294922145539125, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1031601165979628634, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751993359516239629, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2057098229209462930, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2498852893899705282, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3181854565094917088, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4346390979109727816, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -391,6 +486,10 @@ PrefabInstance:
     - target: {fileID: 7561304237036820382, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
       propertyPath: m_Name
       value: CarBoosters (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7561304237036820382, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}

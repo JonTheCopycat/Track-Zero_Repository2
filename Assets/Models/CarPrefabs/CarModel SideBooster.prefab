@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2016213738380977265}
   - component: {fileID: 3282096250643519403}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: CarModel SideBooster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,6 +108,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8248924718283475517, guid: dcc104f4629208b42a83b3a3a807517a, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: dcc104f4629208b42a83b3a3a807517a, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -116,6 +120,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: d7c8afa71965f414c99515411c82d29d, type: 2}
+    - target: {fileID: -5412762281675209232, guid: dcc104f4629208b42a83b3a3a807517a, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: -1478901132541376433, guid: dcc104f4629208b42a83b3a3a807517a, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -140,6 +148,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: sideBoosterCar
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: dcc104f4629208b42a83b3a3a807517a, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1153233194451438590, guid: dcc104f4629208b42a83b3a3a807517a, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1928710293737388961, guid: dcc104f4629208b42a83b3a3a807517a, type: 3}
       propertyPath: m_Convex
       value: 1
@@ -149,9 +165,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3451118302482216456, guid: dcc104f4629208b42a83b3a3a807517a, type: 3}
-      propertyPath: m_Enabled
-      value: 0
+      propertyPath: m_Convex
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3451118302482216456, guid: dcc104f4629208b42a83b3a3a807517a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3451118302482216456, guid: dcc104f4629208b42a83b3a3a807517a, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: b128b79057f43f34a83aa545eb41dd92, type: 2}
     - target: {fileID: 3740793811136782740, guid: dcc104f4629208b42a83b3a3a807517a, type: 3}
       propertyPath: m_Convex
       value: 1
@@ -167,6 +191,10 @@ PrefabInstance:
     - target: {fileID: 4245679366414757568, guid: dcc104f4629208b42a83b3a3a807517a, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4343891639057617507, guid: dcc104f4629208b42a83b3a3a807517a, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dcc104f4629208b42a83b3a3a807517a, type: 3}
@@ -315,6 +343,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 606294922145539125, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1031601165979628634, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751993359516239629, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2057098229209462930, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2498852893899705282, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3142651021314150316, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
       propertyPath: InitialModule.startColor.maxColor.g
       value: 0.0627451
@@ -322,6 +370,10 @@ PrefabInstance:
     - target: {fileID: 3142651021314150316, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
       propertyPath: InitialModule.startColor.maxColor.r
       value: 0.99215686
+      objectReference: {fileID: 0}
+    - target: {fileID: 3181854565094917088, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4346390979109727816, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
       propertyPath: m_LocalScale.x
@@ -374,6 +426,10 @@ PrefabInstance:
     - target: {fileID: 7561304237036820382, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
       propertyPath: m_Name
       value: CarBoosters (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7561304237036820382, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
@@ -456,6 +512,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 606294922145539125, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1031601165979628634, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751993359516239629, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2057098229209462930, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2498852893899705282, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3142651021314150316, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
       propertyPath: InitialModule.startColor.maxColor.g
       value: 0.0627451
@@ -463,6 +539,10 @@ PrefabInstance:
     - target: {fileID: 3142651021314150316, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
       propertyPath: InitialModule.startColor.maxColor.r
       value: 0.99215686
+      objectReference: {fileID: 0}
+    - target: {fileID: 3181854565094917088, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4346390979109727816, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
       propertyPath: m_LocalScale.x
@@ -515,6 +595,10 @@ PrefabInstance:
     - target: {fileID: 7561304237036820382, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
       propertyPath: m_Name
       value: CarBoosters
+      objectReference: {fileID: 0}
+    - target: {fileID: 7561304237036820382, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 18f1b19a89f508e4d98d294a2c890baf, type: 3}

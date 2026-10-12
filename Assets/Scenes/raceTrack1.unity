@@ -385,9 +385,21 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -1868465797211041093, guid: c05f12257ef93154e8df62c598b74b92, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 196126808131546329, guid: c05f12257ef93154e8df62c598b74b92, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c05f12257ef93154e8df62c598b74b92, type: 3}
       propertyPath: m_Name
       value: raceTrack
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c05f12257ef93154e8df62c598b74b92, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1667801644242527616, guid: c05f12257ef93154e8df62c598b74b92, type: 3}
       propertyPath: m_CastShadows
@@ -405,6 +417,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[2]
       value: 
       objectReference: {fileID: 2100000, guid: 4268fc23317774e4aaab5d423ee37d9a, type: 2}
+    - target: {fileID: 2808589978823258411, guid: c05f12257ef93154e8df62c598b74b92, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3228588871220446154, guid: c05f12257ef93154e8df62c598b74b92, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -442,6 +458,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 479811738202652464, guid: 95388e7e3e1ac5140a1d5ab51de87ca7, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3969416186818282258, guid: 95388e7e3e1ac5140a1d5ab51de87ca7, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -502,9 +522,29 @@ PrefabInstance:
       propertyPath: cameraStiffness
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 3969416186818282261, guid: 95388e7e3e1ac5140a1d5ab51de87ca7, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 95
+      objectReference: {fileID: 0}
     - target: {fileID: 3969416186818282263, guid: 95388e7e3e1ac5140a1d5ab51de87ca7, type: 3}
       propertyPath: m_Name
       value: InGame Camera
+      objectReference: {fileID: 0}
+    - target: {fileID: 3969416186818282263, guid: 95388e7e3e1ac5140a1d5ab51de87ca7, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7676950322091221617, guid: 95388e7e3e1ac5140a1d5ab51de87ca7, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8643130408283757516, guid: 95388e7e3e1ac5140a1d5ab51de87ca7, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8720882574413950031, guid: 95388e7e3e1ac5140a1d5ab51de87ca7, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 95388e7e3e1ac5140a1d5ab51de87ca7, type: 3}

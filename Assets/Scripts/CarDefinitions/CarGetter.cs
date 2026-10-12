@@ -65,7 +65,7 @@ namespace Cars
             carModel = carObject.GetComponent<CarModel>();
 
             hitbox.localScale = new Vector3(carModel.GetHitboxSize().x * 0.8f, hitbox.localScale.y, carModel.GetHitboxSize().y * 0.8f);
-            hitbox.transform.localPosition = offset + new Vector3(0, 0.5f, 0);
+            hitbox.transform.localPosition = offset /*+ new Vector3(0, 0.5f, 0)*/;
 
             Debug.Log("CarGetter");
             started = true;

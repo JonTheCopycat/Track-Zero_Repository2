@@ -16,14 +16,15 @@ TagManager:
   - FastArea
   - NetworkPlayer
   - Water
+  - PlayerWheel
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Cars
   - Water
   - UI
-  - 
+  - Track
   - 
   - 
   - 

@@ -1,10 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using Cars;
-using System.Threading;
-using UnityEngine.UIElements;
 
 namespace CarBehaviour
 {
@@ -82,11 +80,8 @@ namespace CarBehaviour
         float handlingVel;
         float handlingAcc;
         float handlingLimiter;
-        float driftAccLimiter;
-        float springAcceleration;
-        float springVelocity;
-        float springPosition;
-        float airAngleDown;
+
+        float airAngleDown; //marked for removal
 
         //collision tracking
         float lastCollisionStrength;
@@ -95,6 +90,9 @@ namespace CarBehaviour
         protected GameObject FinishLine;
 
         RaycastHit raycastHit;
+
+        WheelCollider[] arrWheelsFront;
+        WheelCollider[] arrWheelsRear;
         
         //public ScreenManager screenManager;
 
@@ -313,8 +311,8 @@ namespace CarBehaviour
             if (started)
             {
                 //change handling, publicly (so that other scripts that rely on this can use it without problem)
-                handling = 0.05f + car.GetHandling() * Mathf.Lerp(rb.velocity.magnitude / (450 * speedFactor), 0.8f, 0.3f) * speedFactor;
-                dHandling = 0.05f + car.GetDHandling() * Mathf.Lerp(rb.velocity.magnitude / (450 * speedFactor), 0.8f, 0.3f) * speedFactor;
+                handling = car.GetHandling() * Mathf.LerpUnclamped(1.5f, 1f, rb.velocity.sqrMagnitude / Mathf.Pow(250f * speedFactor, 2)) * speedFactor;
+                dHandling = car.GetDHandling() * Mathf.LerpUnclamped(1.5f, 1f, rb.velocity.sqrMagnitude / Mathf.Pow(250f * speedFactor, 2)) * speedFactor;
 
                 CustomUpdate();
             }
@@ -328,7 +326,7 @@ namespace CarBehaviour
             if (car != null)
             {
                 maxSpeed = car.GetMaxSpeed() * speedFactor;
-                acceleration = car.GetAcceleration() * speedFactor;
+                acceleration = car.GetAcceleration() * 0.5f * speedFactor;
                 boostStrength = car.GetBoostStrength() * speedFactor;
                 driftAcceleration = car.GetDriftAcceleration();
                 traction = car.GetTraction();
@@ -363,9 +361,6 @@ namespace CarBehaviour
             lastAngularVelocity = rb.angularVelocity;
             lastVelocity = rb.velocity;
             lastPosition = rb.position;
-            springAcceleration = 0;
-            springVelocity = 0;
-            springPosition = 0;
 
             suspendDistance = 0.5f * transform.localScale.y;
 
@@ -375,10 +370,19 @@ namespace CarBehaviour
             handlingVel = 0;
             handlingAcc = 0;
             handlingLimiter = 0;
-            driftAccLimiter = 0;
 
             lastCollisionStrength = 0;
             lastCollisionTime = 0;
+
+            arrWheelsFront = new WheelCollider[2];
+            arrWheelsRear = new WheelCollider[2];
+
+            CarModel carModel = carGetter.GetCarModel();
+            for (int i = 0; i < 2; i++)
+            {
+                arrWheelsFront[i] = carModel.FrontTires[i].GetComponent<WheelCollider>();
+                arrWheelsRear[i] = carModel.RearTires[i].GetComponent<WheelCollider>();
+            }
 
             airAngleDown = 0;
 
@@ -388,6 +392,9 @@ namespace CarBehaviour
             boostStart = false;
             status = 0x0;
             BST_running = false;
+
+            //Collision Manipulation
+
 
             //Time.timeScale = 0.5f;
             Debug.Log("CarControl");
@@ -442,40 +449,62 @@ namespace CarBehaviour
                 TractionControl(Time.fixedDeltaTime);
 
                 //fake physics to stay on the track
-                RaycastHit[] hits = new RaycastHit[5];
+                List<RaycastHit> hits = new List<RaycastHit>();
                 RaycastHit temp;
+                int mask = 0b111110011;
                 Vector3 currentPoint; // to be used to keep this readable despite the math that's about to happen
                                       //it will be relative
                                       //center
-                Physics.Raycast(
-                    new Ray(rb.position + transform.up * suspendDistance, -currentUp), out temp, (graceGripDistance + suspendDistance));
-                hits[0] = new RaycastHit();
+                //Physics.Raycast(
+                //    new Ray(rb.position + transform.up * suspendDistance, -currentUp), out temp, (graceGripDistance + suspendDistance), mask);
+                //hits[0] = new RaycastHit();
+
+                int wheelsOnGround = 0;
+                //front and back wheel parallel check
+
+                for (int i = 0; i < 2; i++)
+                {
+                    //front wheel
+                    currentPoint = arrWheelsFront[i].transform.position;
+                    Physics.Raycast(
+                        new Ray(currentPoint + transform.up * arrWheelsFront[i].radius, -currentUp),
+                        out temp, (graceGripDistance + arrWheelsFront[i].radius * 2), mask);
+                    hits.Add(temp);
+
+                    //back wheel
+                    currentPoint = arrWheelsRear[i].transform.position;
+                    Physics.Raycast(
+                        new Ray(currentPoint + transform.up * arrWheelsRear[i].radius, -currentUp),
+                        out temp, (graceGripDistance + arrWheelsRear[i].radius * 2), mask);
+                    hits.Add(temp);
+
+                }
 
                 //every corner/wheel
 
-                currentPoint = rb.rotation * new Vector3(carGetter.GetHitboxSize().x, 0, carGetter.GetHitboxSize().y);
-                Physics.Raycast(
-                    new Ray(rb.position + transform.up * suspendDistance + currentPoint * 0.5f, Vector3.RotateTowards(-currentUp, currentPoint.normalized, 10 * Mathf.Deg2Rad, 0)),
-                    out temp, (graceGripDistance + suspendDistance));
-                hits[1] = temp;
+                //currentPoint = rb.rotation * new Vector3(carGetter.GetHitboxSize().x, 0, carGetter.GetHitboxSize().y);
+                //Physics.Raycast(
+                //    new Ray(rb.position + transform.up * suspendDistance + currentPoint * 0.5f, Vector3.RotateTowards(-currentUp, currentPoint.normalized, 10 * Mathf.Deg2Rad, 0)),
+                //    out temp, (graceGripDistance + suspendDistance), mask);
+                //hits[1] = temp;
 
-                currentPoint = rb.rotation * new Vector3(-carGetter.GetHitboxSize().x, 0, carGetter.GetHitboxSize().y);
-                Physics.Raycast(
-                    new Ray(rb.position + transform.up * suspendDistance * transform.localScale.y + currentPoint * 0.5f, Vector3.RotateTowards(-currentUp, currentPoint.normalized, 10 * Mathf.Deg2Rad, 0)),
-                    out temp, (graceGripDistance + suspendDistance) * transform.localScale.y);
-                hits[2] = temp;
+                //currentPoint = rb.rotation * new Vector3(-carGetter.GetHitboxSize().x, 0, carGetter.GetHitboxSize().y);
+                //Physics.Raycast(
+                //    new Ray(rb.position + transform.up * suspendDistance * transform.localScale.y + currentPoint * 0.5f, Vector3.RotateTowards(-currentUp, currentPoint.normalized, 10 * Mathf.Deg2Rad, 0)),
+                //    out temp, (graceGripDistance + suspendDistance) * transform.localScale.y, mask);
+                //hits[2] = temp;
 
-                currentPoint = rb.rotation * new Vector3(-carGetter.GetHitboxSize().x, 0, -carGetter.GetHitboxSize().y);
-                Physics.Raycast(
-                    new Ray(rb.position + transform.up * suspendDistance * transform.localScale.y + currentPoint * 0.5f, Vector3.RotateTowards(-currentUp, currentPoint.normalized, 10 * Mathf.Deg2Rad, 0)),
-                    out temp, (graceGripDistance + suspendDistance));
-                hits[3] = temp;
+                //currentPoint = rb.rotation * new Vector3(-carGetter.GetHitboxSize().x, 0, -carGetter.GetHitboxSize().y);
+                //Physics.Raycast(
+                //    new Ray(rb.position + transform.up * suspendDistance * transform.localScale.y + currentPoint * 0.5f, Vector3.RotateTowards(-currentUp, currentPoint.normalized, 10 * Mathf.Deg2Rad, 0)),
+                //    out temp, (graceGripDistance + suspendDistance), mask);
+                //hits[3] = temp;
 
-                currentPoint = rb.rotation * new Vector3(carGetter.GetHitboxSize().x, 0, -carGetter.GetHitboxSize().y);
-                Physics.Raycast(
-                    new Ray(rb.position + transform.up * suspendDistance + currentPoint * 0.5f, Vector3.RotateTowards(-currentUp, currentPoint.normalized, 10 * Mathf.Deg2Rad, 0)),
-                    out temp, (graceGripDistance + suspendDistance));
-                hits[4] = temp;
+                //currentPoint = rb.rotation * new Vector3(carGetter.GetHitboxSize().x, 0, -carGetter.GetHitboxSize().y);
+                //Physics.Raycast(
+                //    new Ray(rb.position + transform.up * suspendDistance + currentPoint * 0.5f, Vector3.RotateTowards(-currentUp, currentPoint.normalized, 10 * Mathf.Deg2Rad, 0)),
+                //    out temp, (graceGripDistance + suspendDistance), mask);
+                //hits[4] = temp;
 
                 int groundHits = 0;
                 rotationFromHit = Quaternion.identity;
@@ -485,15 +514,15 @@ namespace CarBehaviour
                 status &= (short)~(C_ONICE | C_ONDIRT);
                 status &= (short)~C_CHARGING;
                 bool foundBoost = false;
-                for (int i = 0; i < hits.Length; i++)
+                for (int i = 0; i < hits.Count; i++)
                 {
-                    if (hits[i].collider == null || hits[i].collider.tag.Equals("Guardrail") || Vector3.Angle(rb.rotation * Vector3.up, hits[i].normal) > 60f)
+                    if (hits[i].collider == null || Vector3.Angle(rb.rotation * Vector3.up, hits[i].normal) > 60f)
                     {
                         continue;
                     }
                     else
                     {
-                        groundHits++;
+                        wheelsOnGround++;
                     }
 
                     //check if this is the kill plane
@@ -522,7 +551,7 @@ namespace CarBehaviour
                     //if ((status & C_ONTURBO) != 0)
                     //    Debug.Log("Stopping here");
 
-
+                    Debug.DrawRay(hits[i].point, hits[i].normal, Color.red, Time.deltaTime * 2);
 
                     //average this with the current average
                     if (rotationFromHit == Quaternion.identity)
@@ -565,8 +594,12 @@ namespace CarBehaviour
                     currentUp = rotationFromHit * Vector3.up;
                 }
 
-                if (groundHits > 0)
+                
+
+                if (groundHits > 0 || wheelsOnGround > 0)
                 {
+                    status |= C_GROUNDED;
+
                     //track your downforce based on your distance from the ground before corrections (obsolete)
                     //downforce = (-groundHit.distance / suspendDistance) * 2f + 3f;
 
@@ -589,7 +622,7 @@ namespace CarBehaviour
 
                     //springPosition = Mathf.Clamp(springPosition + springVelocity * Time.deltaTime, -0.1f, 0.1f);
 
-                    rb.MovePosition(targetPos /*+ rb.rotation * Vector3.up * springPosition*/);
+                    //rb.MovePosition(targetPos /*+ rb.rotation * Vector3.up * springPosition*/);
                     //rb.MovePosition(targetPos);
 
                     //rb.position = raycastHit.point + raycastHit.normal * suspendDistance;
@@ -605,7 +638,7 @@ namespace CarBehaviour
                         //cap the distance from the real rotation
                         smoothRotation = Quaternion.RotateTowards(rotationFromHit, smoothRotation, 1.5f);
                     }
-                    rb.MoveRotation(smoothRotation);
+                    //rb.MoveRotation(smoothRotation);
                     //rb.MoveRotation(rotationFromHit);
 
                     //using the force approach
@@ -619,36 +652,29 @@ namespace CarBehaviour
 
                     //}
 
-                    //calculate downforce based on downwards velocity
-                    //if velocity is downwards
-                    if (isGoingInDirection(Vector3.down))
-                    {
-                        rawDownforce = Mathf.Lerp(rawDownforce, Vector3.Project(rb.velocity, rb.rotation * Vector3.down).magnitude * 0.5f, 0.5f * 60 * Time.fixedDeltaTime);
+                    ////calculate downforce based on downwards velocity
+                    ////if velocity is downwards
+                    //if (isGoingInDirection(Vector3.down))
+                    //{
+                    //    rawDownforce = Mathf.Lerp(rawDownforce, Vector3.Project(rb.velocity, rb.rotation * Vector3.down).magnitude * 0.5f, 0.5f * 60 * Time.fixedDeltaTime);
 
-                    }
-                    else
-                    {
-                        rawDownforce = Mathf.Lerp(rawDownforce, -Vector3.Project(rb.velocity, rb.rotation * Vector3.down).magnitude * 0.5f, 0.5f * 60 * Time.fixedDeltaTime);
-                    }
-                    downforce = normalGravity ? rawDownforce - (Physics.gravity.magnitude * Time.fixedDeltaTime) : rawDownforce;
+                    //}
+                    //else
+                    //{
+                    //    rawDownforce = Mathf.Lerp(rawDownforce, -Vector3.Project(rb.velocity, rb.rotation * Vector3.down).magnitude * 0.5f, 0.5f * 60 * Time.fixedDeltaTime);
+                    //}
+                    //downforce = normalGravity ? rawDownforce - (Physics.gravity.magnitude * Time.fixedDeltaTime) : rawDownforce;
 
-                    downforce = Mathf.Floor(Mathf.Clamp(downforce, -20, 20) * 100) / 100;
+                    //downforce = Mathf.Floor(Mathf.Clamp(downforce, -20, 20) * 100) / 100;
                     //Debug.Log("downforce: " + downforce + "\n expected downforce: " + (Physics.gravity.magnitude * Time.fixedDeltaTime));
 
-                    //if you just landed, you get a small boost
-                    if ((status & C_ENABLED) != 0 && (status & C_GROUNDED) == 0 && inputHandler.GetAcceleration() > 0.01f)
-                    {
-                        rb.velocity = Vector3.ProjectOnPlane(rb.velocity, currentUp) + rb.rotation * Vector3.forward * 50f * Mathf.Sin(Vector3.Angle(rb.velocity, rb.rotation * Vector3.forward) * Mathf.Deg2Rad);
-                        //rb.velocity += rb.rotation * Vector3.forward * Vector3.Project(rb.velocity, -currentUp).magnitude * 0.5f;
-
-                        rb.velocity = Vector3.ClampMagnitude(rb.velocity, 400 * speedFactor);
-                    }
+                    
                     //rb.useGravity = false;
 
                     //if there is velocity towards the ground, cancel it out, and eliminate some of it from forward velocity?
                     if (Vector3.Project(rb.velocity, rb.rotation * Vector3.down).magnitude > 0f)
                     {
-                        rb.velocity -= Vector3.Project(rb.velocity, rb.rotation * Vector3.down);
+                        //rb.velocity -= Vector3.Project(rb.velocity, rb.rotation * Vector3.down);
                     }
 
                     if (foundBoost)
@@ -656,9 +682,8 @@ namespace CarBehaviour
                         BoostPadActive();
                     }
 
-
-
-                    status |= C_GROUNDED;
+                    if (!rb.useGravity)
+                        rb.AddForce(currentUp * -Physics.gravity.magnitude * rb.mass * speedFactor);
                 }
                 else
                 {
@@ -702,7 +727,7 @@ namespace CarBehaviour
                     targetRotation = Quaternion.LookRotation(newForward, newUp);
 
 
-                    rb.MoveRotation(Quaternion.Lerp(rb.rotation, targetRotation, 0.05f * 60 * Time.fixedDeltaTime));
+                    //rb.MoveRotation(Quaternion.Lerp(rb.rotation, targetRotation, 0.05f * 60 * Time.fixedDeltaTime));
 
                     if (normalGravity)
                     {
@@ -964,83 +989,72 @@ namespace CarBehaviour
         ContactPoint lastContact = new ContactPoint();
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.transform.tag.Equals("KillPlane"))
+            ContactPoint[] contacts = new ContactPoint[6];
+            collision.GetContacts(contacts);
+            foreach (ContactPoint contact in contacts)
             {
-                Respawn();
-                return;
-            }
+                Debug.DrawRay(contact.point, contact.normal, Color.white);
 
-            if (collision.transform.tag.Equals("Player"))
-            {
-                rb.velocity += collision.GetContact(0).normal.normalized * 10f;
-                rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, lastAngularVelocity, 0.5f);
-            }
-            else
-            {
-                //restore car if the collision is vertical
-                if (Vector3.Angle(transform.up, collision.GetContact(0).normal) < 30f)
+                if (contact.thisCollider.tag.Equals("Player"))
                 {
-                    rb.position += collision.GetContact(0).normal.normalized * 0.5f;
-                    //rb.velocity = rb.velocity.normalized * lastVelocity.magnitude;
-                    //rb.angularVelocity = lastAngularVelocity;
-
-                    //show me that it works :)
-                    //Debug.DrawRay(collision.GetContact(0).point, collision.GetContact(0).normal, Color.red, 10f);
-                }
-                else
-                {
-                    //track the collision
-
-                    //look at the last velocity only in the direction of the collision, and then reorient it to the car rotation, and then get the x value of that
-                    lastCollisionStrength = (Quaternion.Inverse(rb.rotation) * Vector3.Project(lastVelocity, -collision.GetContact(0).normal)).x;
-
-
-                    Vector3 targetVector = Vector3.Project(rb.rotation * Vector3.forward, Vector3.Cross(collision.GetContact(0).normal, rb.rotation * Vector3.up));
-                    Quaternion forwardFromNormal = Quaternion.LookRotation(targetVector, transform.up);
-
-                    if (Vector3.Angle(lastVelocity, rb.velocity) > 10f)
+                    if (Vector3.Angle(transform.up, collision.GetContact(0).normal) > 45f && false)
                     {
-                        rb.velocity = Vector3.RotateTowards(lastVelocity, Vector3.Project(rb.velocity, forwardFromNormal * Vector3.forward), 10f, 300f);
-                    }
-                    rb.position += rb.rotation * Vector3.up * 0.1f /*+ collision.GetContact(0).normal.normalized * 0.1f*/;
+                        //track the collision
 
-                    rb.velocity -= rb.velocity.normalized * Vector3.Project(lastVelocity, -collision.GetContact(0).normal).magnitude * 0.5f;
-                    boostMeter = Mathf.Clamp01(boostMeter - Mathf.Abs(lastCollisionStrength) / 1200);
+                        //look at the last velocity only in the direction of the collision, and then reorient it to the car rotation, and then get the x value of that
+                        lastCollisionStrength = (Quaternion.Inverse(rb.rotation) * Vector3.Project(lastVelocity, -collision.GetContact(0).normal)).x;
 
-                    //rb.velocity += collision.GetContact(0).normal.normalized * 5f;
-                    //status &= C_DRIFTING;
 
-                    //smooth out collision
-                    if (Vector3.Angle(-collision.GetContact(0).normal, rb.rotation * Vector3.forward) < 90f)
-                    {
-                        rb.velocity += collision.GetContact(0).normal * 0.5f;
-                        transform.rotation = Quaternion.RotateTowards(transform.rotation, forwardFromNormal, 10f);
+                        Vector3 targetVector = Vector3.Project(rb.rotation * Vector3.forward, Vector3.Cross(collision.GetContact(0).normal, rb.rotation * Vector3.up));
+                        Quaternion forwardFromNormal = Quaternion.LookRotation(targetVector, transform.up);
+
+                        if (Vector3.Angle(lastVelocity, rb.velocity) > 10f)
+                        {
+                            rb.velocity = Vector3.RotateTowards(lastVelocity, Vector3.Project(rb.velocity, forwardFromNormal * Vector3.forward), 10f, 300f);
+                        }
+                        //rb.position += rb.rotation * Vector3.up * 0.1f /*+ collision.GetContact(0).normal.normalized * 0.1f*/;
+
+                        rb.velocity -= rb.velocity.normalized * Vector3.Project(lastVelocity, -collision.GetContact(0).normal).magnitude * 0.5f;
+                        boostMeter = Mathf.Clamp01(boostMeter - Mathf.Abs(lastCollisionStrength) / 1200);
+
+                        //rb.velocity += collision.GetContact(0).normal.normalized * 5f;
+                        status &= C_DRIFTING;
+
+                        //smooth out collision
+                        if (Vector3.Angle(-collision.GetContact(0).normal, rb.rotation * Vector3.forward) < 90f)
+                        {
+                            rb.velocity += collision.GetContact(0).normal * 0.5f;
+                            transform.rotation = Quaternion.RotateTowards(transform.rotation, forwardFromNormal, 10f);
+                        }
+
+
+
+                        //rb.angularVelocity = Vector3.MoveTowards(lastAngularVelocity, rb.angularVelocity, currentTraction * 10f);
+                        //rb.angularVelocity = Vector3.zero;
                     }
 
+                    //archived methods
 
 
-                    //rb.angularVelocity = Vector3.MoveTowards(lastAngularVelocity, rb.angularVelocity, currentTraction * 10f);
-                    rb.angularVelocity = Vector3.zero;
+                    //rb.velocity = rb.velocity.normalized * Mathf.Lerp(rb.velocity.magnitude, lastVelocity.magnitude, 0.5f);
+
+
+                    //rb.velocity += collision.GetContact(0).normal.normalized * 10f;
+
+                    //calculate the strength
+                    //Vector3 finalTorqueApplied = Vector3.Cross(lastRotation * Vector3.forward, forwardFromNormal * Vector3.forward) * 1f;
+                    //determining the direction of the rotation.
+                    //if (inputHandler.GetSteering() > inputHandler.GetDeadzone())
+                    //{
+                    //    finalTorqueApplied *= 0.1f;
+                    //}
                 }
-
-                //archived methods
-
-
-                //rb.velocity = rb.velocity.normalized * Mathf.Lerp(rb.velocity.magnitude, lastVelocity.magnitude, 0.5f);
-
-
-                //rb.velocity += collision.GetContact(0).normal.normalized * 10f;
-
-                //calculate the strength
-                //Vector3 finalTorqueApplied = Vector3.Cross(lastRotation * Vector3.forward, forwardFromNormal * Vector3.forward) * 1f;
-                //determining the direction of the rotation.
-                //if (inputHandler.GetSteering() > inputHandler.GetDeadzone())
-                //{
-                //    finalTorqueApplied *= 0.1f;
-                //}
-
+                else if (contact.thisCollider.tag.Equals("PlayerWheel"))
+                {
+                    return;
+                }
             }
-            //drifting = true;
+
             lastContact = collision.GetContact(0);
             lastCollisionTime = Time.time;
         }
@@ -1049,45 +1063,63 @@ namespace CarBehaviour
         private void OnCollisionStay(Collision collision)
         {
             //OnCollisionEnter(collision);
-
-            if (collision.transform.tag.Equals("Player"))
+            ContactPoint[] contacts = new ContactPoint[6];
+            collision.GetContacts(contacts);
+            foreach (ContactPoint contact in contacts)
             {
-                rb.velocity += collision.GetContact(0).normal.normalized * 10f * Time.deltaTime;
-                rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, lastAngularVelocity, 0.5f * 60 * Time.deltaTime);
-            }
-            else
-            {
-                if (transform.InverseTransformVector(collision.GetContact(0).normal).y > 0.5f)
+                Debug.DrawRay(contact.point, contact.normal, Color.white);
+
+                if (contact.thisCollider.tag.Equals("Player"))
                 {
-                    rb.position += collision.GetContact(0).normal.normalized * 0.5f;
-                    //rb.velocity = rb.velocity.normalized * lastVelocity.magnitude;
-                    //rb.angularVelocity = lastAngularVelocity;
-
-                    //show me that it works :)
-                    //Debug.DrawRay(collision.GetContact(0).point, collision.GetContact(0).normal, Color.red, 10f);
-                }
-                else
-                {
-
-                    //if (Vector3.Angle(lastVelocity, rb.velocity) > 10f)
-                    //{
-                    //    rb.velocity -= Vector3.Project(rb.velocity, collision.GetContact(0).normal) * 60 * Time.deltaTime;
-                    //}
-                    Vector3 targetVector = Vector3.Project(rb.rotation * Vector3.forward, Vector3.Cross(collision.GetContact(0).normal, rb.rotation * Vector3.up));
-                    Quaternion forwardFromNormal = Quaternion.LookRotation(targetVector, rb.rotation * Vector3.up);
-
-                    //rb.velocity += collision.GetContact(0).normal.normalized * 1f * 60 * Time.deltaTime;
-                    rb.velocity -= rb.velocity.normalized * Vector3.Project(lastVelocity, -collision.GetContact(0).normal).magnitude * 0.2f * 60 * Time.deltaTime;
-
-                    //smooth out collision
-                    if (Vector3.Angle(-collision.GetContact(0).normal, rb.rotation * Vector3.forward) < 90)
+                    if (Vector3.Angle(transform.up, collision.GetContact(0).normal) > 45f && false)
                     {
-                        rb.velocity += collision.GetContact(0).normal * 0.25f * 60 * Time.deltaTime;
-                        transform.rotation = Quaternion.RotateTowards(transform.rotation, forwardFromNormal, 2f * 60 * Time.deltaTime);
+
+                        //if (Vector3.Angle(lastVelocity, rb.velocity) > 10f)
+                        //{
+                        //    rb.velocity -= Vector3.Project(rb.velocity, collision.GetContact(0).normal) * 60 * Time.deltaTime;
+                        //}
+                        Vector3 targetVector = Vector3.Project(rb.rotation * Vector3.forward, Vector3.Cross(collision.GetContact(0).normal, rb.rotation * Vector3.up));
+                        Quaternion forwardFromNormal = Quaternion.LookRotation(targetVector, rb.rotation * Vector3.up);
+
+                        //rb.velocity += collision.GetContact(0).normal.normalized * 1f * 60 * Time.deltaTime;
+                        rb.velocity -= rb.velocity.normalized * Vector3.Project(lastVelocity, -collision.GetContact(0).normal).magnitude * 0.2f * 60 * Time.deltaTime;
+
+                        //smooth out collision
+                        if (Vector3.Angle(-collision.GetContact(0).normal, rb.rotation * Vector3.forward) < 90)
+                        {
+                            rb.velocity += collision.GetContact(0).normal * 0.25f * 60 * Time.deltaTime;
+                            transform.rotation = Quaternion.RotateTowards(transform.rotation, forwardFromNormal, 2f * 60 * Time.deltaTime);
+                        }
                     }
+                } 
+                else if (contact.thisCollider.tag.Equals("PlayerWheel"))
+                {
+                    ////check if this is the kill plane
+                    //if (collision.gameObject.tag.Equals("KillPlane"))
+                    //{
+                    //    Respawn();
+                    //    return;
+                    //}
+                    //if (collision.gameObject.tag.Equals("BoostPanel"))
+                    //{
+                    //    //figure something out later
+                    //}
+
+                    //status = (short)(collision.gameObject.tag.Equals("SlowArea") ?
+                    //    status | C_ONDIRT :
+                    //    status);
+
+
+                    //status = (short)(collision.gameObject.tag.Equals("SlipperyArea") ?
+                    //    status | C_ONICE :
+                    //    status);
+
+                    //status = (short)(collision.gameObject.tag.Equals("FastArea") ?
+                    //    status | C_CHARGING :
+                    //    status);
+
+                    return;
                 }
-
-
             }
 
             //rb.angularVelocity = Vector3.MoveTowards(lastAngularVelocity, rb.angularVelocity, currentTraction * 10f * Time.deltaTime);
@@ -1096,10 +1128,7 @@ namespace CarBehaviour
 
         //private void OnCollisionExit(Collision collision)
         //{
-        //    if (!collision.transform.tag.Equals("Player"))
-        //    {
-        //        rb.velocity = Vector3.ClampMagnitude(Vector3.Project(rb.velocity, lastContact.normal), 5f) + Vector3.ProjectOnPlane(rb.velocity, lastContact.normal);
-        //    }
+
         //}
 
         private void OnTriggerEnter(Collider other)
@@ -1125,6 +1154,11 @@ namespace CarBehaviour
             {
                 BoostPadActive();
             }
+        }
+
+        private void PreventGhostHits(PhysicsScene scene, NativeArray<ModifiableContactPair> pairs)
+        {
+
         }
 
         private void BoostPadActive()
@@ -1279,7 +1313,7 @@ namespace CarBehaviour
 
             if (isDrifting())
             {
-                currentHandling = handling * 1.5f + (isSliding() ? 0.6f : 0) + oversteer + 0.2f * rb.velocity.magnitude / (350 * speedFactor);
+                currentHandling = handling * 1.1f + (isSliding() ? 0.2f : 0) + oversteer + 0.2f * rb.velocity.magnitude / (350 * speedFactor);
 
             }
             if (isBraking())
@@ -1421,7 +1455,7 @@ namespace CarBehaviour
             {
                 handlingVel = handlingVel + handlingAcc * Time.deltaTime;
             }
-            else if (Mathf.Abs(inputHandler.GetSteering()) >= 0.9f)
+            else if (Mathf.Abs(inputHandler.GetSteering()) >= 0.9f && isDrifting())
             {
                 //lower it, but very slowly
                 handlingVel = handlingVel + handlingAcc * 0.5f * Time.deltaTime;
@@ -1479,7 +1513,7 @@ namespace CarBehaviour
             try
             {
                 //handling
-                Quaternion q = Quaternion.AngleAxis(handlingVel * Mathf.Rad2Deg * Time.deltaTime, rb.rotation * Vector3.up);
+                Quaternion q = Quaternion.AngleAxis(handlingVel * Mathf.Lerp(0f, 1f, rb.velocity.magnitude / 10) * Mathf.Rad2Deg * Time.deltaTime, rb.rotation * Vector3.up);
                 Vector3 frontNewPosition = q * (frontCenter - backCenter) + backCenter;
                 Vector3 backNewPosition = backCenter + rb.velocity * 0.033f * oversteerVel * Time.deltaTime;
                 //rb.MovePosition(q * (rb.position - backCenter) + backCenter);
@@ -1717,10 +1751,7 @@ namespace CarBehaviour
             sideProjection = Vector3.Project(rb.velocity, rb.rotation * Vector3.right);
             frontProjection = Vector3.Project(rb.velocity, rb.rotation * Vector3.forward);
             driftAngle = Vector3.Angle(Vector3.ProjectOnPlane(rb.velocity, rb.rotation * Vector3.up), rb.rotation * Vector3.forward);
-            float rawFriction = Mathf.Max(currentTraction, 0.001f) * tractionModifier * terrainModifier * 60 + downforce;
-
-            //drift conditions by angle (for 2.4 - current)
-            float deltaAngle = Mathf.Atan2(Mathf.Clamp(rawFriction, 0, sideProjection.magnitude), frontProjection.magnitude);
+            
             if ((status & C_DRIFTING) == 0 && driftAngle > fullDriftAngle)
             {
                 status |= C_DRIFTING;
@@ -1731,12 +1762,7 @@ namespace CarBehaviour
                 status &= (short)~C_DRIFTING;
             }
 
-            float newTraction = Mathf.LerpUnclamped(0.025f, 0.075f, traction) * speedFactor + Mathf.Lerp(0.00f, 0.03f, driftAngle / 90) + (isDrifting() ? 0.00f : 0.1f);
-            
-            if (!isGrounded())
-            {
-                newTraction *= 0.5f;
-            }
+            float newTraction = Mathf.LerpUnclamped(0.02f, 0.07f, traction) * speedFactor + Mathf.Lerp(0.00f, 0.03f, driftAngle / 90) + (isDrifting() ? 0.00f : 0.1f);
 
             if (inputHandler.GetSteering() * ((Quaternion.Inverse(rb.rotation) * rb.velocity).x) > 0 && false)
             {
@@ -1749,15 +1775,18 @@ namespace CarBehaviour
             }
 
             //traction calculation and drift acceleration
-            if (!IsRotatingInAir())
+            if (isGrounded())
             {
+                float rawFriction = Mathf.Max(currentTraction, 0.001f) * tractionModifier * terrainModifier * 60 + downforce;
+
+                //drift conditions by angle (for 2.4 - current)
+                float deltaAngle = Mathf.Atan2(Mathf.Clamp(rawFriction, 0, sideProjection.magnitude), frontProjection.magnitude);
 
                 //rb.velocity -= Vector3.ClampMagnitude(sideProjection,
                 //Mathf.Clamp(currentTraction * terrainModifier * 60 + downforce, 0.01f, float.MaxValue)) * 60 * Time.deltaTime;
 
-                
 
-                rb.velocity -= sideProjection.normalized * Mathf.Clamp(rawFriction, 0, sideProjection.magnitude) * 60 * deltaTime;
+                rb.velocity -= 60 * deltaTime * Mathf.Clamp(rawFriction, 0, sideProjection.magnitude) * sideProjection.normalized;
 
 
                 if (isDrifting())
@@ -1808,7 +1837,7 @@ namespace CarBehaviour
                     //    )
                     //    * inputHandler.GetAcceleration() * deltaTime;
 
-                    rb.velocity += rb.rotation * Vector3.forward * (trueMatch * 0.85f * 60) * Mathf.Clamp01(driftAngle / (fullDriftAngle * 2)) * inputHandler.GetAcceleration() * deltaTime;
+                    rb.velocity += rb.rotation * Vector3.forward * (trueMatch * 0.5f * 60) * Mathf.Clamp01(driftAngle / (fullDriftAngle * 2)) * inputHandler.GetAcceleration() * deltaTime;
                     if (isBoostDrifting())
                     {
                         rb.velocity += rb.rotation * Vector3.forward * (trueMatch * 0.1f * 60 + driftAcceleration * 0.8f) * speedFactor * Mathf.Clamp01(driftAngle / (fullDriftAngle * 2)) * inputHandler.GetAcceleration() * deltaTime;
@@ -1841,10 +1870,6 @@ namespace CarBehaviour
                         //treat drift acceleration as normal acceleration, but using frontvelocity
                         //rb.velocity += rb.rotation * Vector3.forward * (maxSpeed - frontProjection.magnitude) / maxSpeed * driftAcceleration * 10 * inputHandler.GetAcceleration() * deltaTime;
                     }
-                }
-                else
-                {
-                    driftAccLimiter = 0;
                 }
 
                 //Debug.DrawRay(rb.position + transform.up, sideProjection, Color.red, Time.deltaTime);
